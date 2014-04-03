@@ -1,0 +1,218 @@
+
+
+//SDIO
+  Scope(\_SB.PCI0) {
+    PowerResource(P0SD, 0, 0) {
+      Method(_STA) {
+        Return(1)
+      }
+
+      Method(_ON) {
+        Store(0xC1, IO80)
+        Store(\_SB.PCI0.SDIO.SDB1, Local0)
+        And(Local0, 0xF3, Local0)
+        Store(Local0, \_SB.PCI0.SDIO.SDB1)
+      }
+
+      Method(_OFF) {
+        Store(0xC2, IO80)
+        DeviceEnterD3Cold (DeviceControlSd)
+        Store(\_SB.PCI0.SDIO.SDB1, Local0)
+        Or(Local0, 0x0C, Local0)
+        Store(Local0, \_SB.PCI0.SDIO.SDB1)
+        FchS0I3ReadyCheck()
+      }
+    }  
+    PowerResource(P3SD, 0, 0) {
+      Method(_STA) {
+        Return(1)
+      }
+
+      Method(_ON) {
+        Store(0xC4, IO80)
+      }
+
+      Method(_OFF) {
+        Store(0xC5, IO80)
+      }
+    }
+  }
+
+  Scope(\_SB.PCI0.SDIO) {
+	  OperationRegion(PCI_, PCI_Config, 0x00, 0x100)
+      Field(PCI_, AnyAcc, NoLock, Preserve) {
+		offset (0x2C),
+                SD2C, 32,
+		offset (0xA0),
+                SDA0, 32,
+                SDA4, 32,
+                SDA8, 32,
+                SDAC, 32,
+                SDB0, 8,
+                SDB1, 8,
+                , 8,
+                SDB3, 8,
+                SDB4, 32,
+                SDB8, 32,
+                SDBC, 32,
+                SDC0, 32,
+
+		offset (0xD0),
+                SDD0, 32,
+
+		offset (0xF0),
+                SDF0, 32,
+                SDF4, 32,
+                SDF8, 32,
+                SDFC, 32
+  	  }
+
+  OperationRegion(SDPM, SystemMemory, \_SB.SDBB, 0x001000)
+  Field(SDPM, AnyAcc, NoLock, Preserve)
+  {
+    //
+    CNFG, 32,
+    SPED, 8,
+    BTWD, 8,
+    SSID, 32,
+    CLKC, 32,
+    CLCM, 8,
+    RETN, 8,
+    VERS,  8,
+    CAPB, 8,
+  }
+    Name (SVBF, Buffer (0x100) {0})
+    CreateDWordField(SVBF, 0x2C, S02C)
+    CreateDWordField(SVBF, 0xA0, S0A0)
+    CreateDWordField(SVBF, 0xA4, S0A4)
+    CreateDWordField(SVBF, 0xA8, S0A8)
+    CreateDWordField(SVBF, 0xAC, S0AC)
+    CreateByteField (SVBF, 0xB0, S0B0)
+    CreateByteField( SVBF, 0xB3, S0B3)
+    CreateDWordField(SVBF, 0xB4, S0B4)
+    CreateDWordField(SVBF, 0xB8, S0B8)
+    CreateDWordField(SVBF, 0xBC, S0BC)
+    CreateDWordField(SVBF, 0xC0, S0C0)
+    CreateDWordField(SVBF, 0xD0, S0D0)
+    CreateDWordField(SVBF, 0xF0, S0F0)
+    CreateDWordField(SVBF, 0xF4, S0F4)
+    CreateDWordField(SVBF, 0xF8, S0F8)
+    CreateDWordField(SVBF, 0xFC, S0FC)
+
+
+      Method(SAVE,0)
+      {
+        if (LEqual(S0A4, 0)) {
+          Store(SD2C, S02C)
+          Store(SDA0, S0A0)
+          Store(SDA4, S0A4)
+          Store(SDA8, S0A8)
+          Store(SDAC, S0AC)
+          Store(SDB0, S0B0)
+          Store(SDB3, S0B3)
+          Store(SDB4, S0B4)
+          Store(SDB8, S0B8)
+          Store(SDBC, S0BC)
+          Store(SDC0, S0C0)
+          Store(SDD0, S0D0)
+          Store(SDF0, S0F0)
+          Store(SDF4, S0F4)
+          Store(SDF8, S0F8)
+          Store(SDFC, S0FC)
+        }
+      }
+
+      Method(RSTO,0)
+      {
+        if (S0A4) {
+          Store(S02C, SD2C)
+          Store(S0A0, SDA0)
+          Store(S0A4, SDA4)
+          Store(S0A8, SDA8)
+          Store(S0AC, SDAC)
+          Store(S0B0, SDB0)
+          Store(S0B3, SDB3)
+          Store(S0B4, SDB4)
+          Store(S0B8, SDB8)
+          Store(S0BC, SDBC)
+          Store(S0C0, SDC0)
+          Store(S0D0, SDD0)
+          Store(S0F0, SDF0)
+          Store(S0F4, SDF4)
+          Store(S0F8, SDF8)
+          Store(S0FC, SDFC)
+        }    
+      }
+
+      Method(SDI_,0)
+      {
+        store(SDA4, Local0)
+        And(Local0, 0xEF8700FF,Local0)
+        if (LEqual(CNFG, 1)) { Or(Local0,0x00580000,Local0) }  //BIT19+BIT20+BIT22
+        if (LEqual(CNFG, 2)) { Or(Local0,0x00400000,Local0) }  //BIT22
+        if (LEqual(CNFG, 3)) { Or(Local0,0x00000000,Local0) }
+        Or(Local0, 0x01200000,Local0) //BIT24 + BIT21
+        if (LEqual(VERS, 1)) { Or(Local0, 0x3200, Local0) }
+        if (LEqual(VERS, 2)) { Or(Local0, 0xC800, Local0) }
+        store(Local0,SDA4)
+        if (LNotEqual(SSID, zero)) { store(SSID,SD2C) }
+        store(zero, Local1)
+        if (CLCM) { Or(Local1, 0x30000, Local1) }
+        shiftleft(RETN, 14, Local2)
+        Or( Local1, Local2, Local1)
+        if (LEqual(VERS, 2)) {
+          And ( Local1, 0xffff00ff, Local1)
+          Or  ( Local1, 0x2503, Local1)
+        }
+        Or ( Local1, 0x70, Local1)
+        Store (SDA8, Local2)
+        And (Local2, 0x3ffc, Local2)
+        Or (Local1, Local2, Local1)
+        
+        store (0x19, SDB0)
+
+        Or (SDD0, 0x200, SDD0)
+        store (Local1, SDA8)
+        store (VERS, SDB3)
+        store (0x0044cc98, SDBC)
+        store (0x000400fa, SDF0)
+        store (0x00040002, SDF4)
+        store (0x00010002, SDF8)
+        store (0x00014000, SDFC)
+      }
+
+      Name(_PR0, Package() {P0SD})
+      Name(_PR3, Package() {P3SD})
+      Method(_DSW,3)
+      {
+        If(Arg0)
+        {
+        }
+        Else
+        {
+        }
+      }
+      Method(_S0W,0)
+      {
+        Return(4)
+      }
+      Method(_PS0,0)
+      {
+//      breakpoint
+        Store(0xC0, IO80)
+        RSTO()
+//test        Store(0x06D5, SMPC)    
+//        SDI_()  
+//        Sleep(2000)
+        DeviceEnterD0 (DeviceControlSd)
+        FchS0I3ReadyCheck()
+      }
+      Method(_PS3,0)
+      {
+        Store(0xC3, IO80)
+        SAVE()
+//        Sleep(2000)
+        DeviceEnterD3Hot (DeviceControlSd)
+      }
+  }
+

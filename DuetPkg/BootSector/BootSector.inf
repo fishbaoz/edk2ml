@@ -1,0 +1,37 @@
+## @file
+# 
+# Copyright (c) 2006 - 2011, Intel Corporation. All rights reserved.<BR>
+# This program and the accompanying materials                          
+# are licensed and made available under the terms and conditions of the BSD License         
+# which accompanies this distribution.  The full text of the license may be found at        
+# http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                           
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+#
+#
+##
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = BootSector
+  FILE_GUID                      = C89D72CE-E21A-4c71-BA79-770EF373D6DA
+  MODULE_TYPE                    = USER_DEFINED
+  VERSION_STRING                 = 1.0
+  CUSTOM_MAKEFILE                = MSFT|Makefile
+  CUSTOM_MAKEFILE                = GCC|GNUmakefile
+
+
+[Sources]
+  bootsect.asm
+  bs16.asm
+  bs32.asm
+  Gpt.asm
+  Mbr.asm
+  start.asm
+  start16.asm
+  start32.asm
+  efi32.asm
+  start64.asm
+  st16_64.asm
+  st32_64.asm
+  efi64.asm

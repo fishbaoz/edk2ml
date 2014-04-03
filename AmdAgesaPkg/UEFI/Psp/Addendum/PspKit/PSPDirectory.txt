@@ -1,0 +1,25 @@
+BIOS_IMAGE  INPUT_FILE = Discovery.dbgX64.fd,  PSP_FV_BASE=0x50000, PSP_FV_SIZE=0x130000, RTM_SIZE = 0xCB000
+#To support PSP Recovery Flash Layout, separate the PSP SPI ROM into 2 categories: Fixed, Dynamic(Update-able)
+  #Two region are contiguous, "PSP_FV_BASE" specify the start of the whole region, while "FIXFV_SIZE" & "DYNFV_SIZE"
+  #Specify size of each
+#BIOS_IMAGE  INPUT_FILE = Discovery.dbgX64.fd,  PSP_FV_BASE=0x50000, FIXFV_SIZE=0x40000, DYNFV_SIZE=0xF0000, RTM_SIZE = 0xDB000
+  #Two region are separated, "FIXFV_BASE" & "FIXFV_SIZE" pair specify the base & size of Fix region, while
+  #"DYNFV_BASE" & "DYNFV_SIZE" specify the base & size of Dynamic(Update-able) region
+#BIOS_IMAGE  INPUT_FILE = Discovery.dbgX64.fd,  FIXFV_BASE=0x50000, FIXFV_SIZE=0x40000, DYNFV_BASE=0x90000, DYNFV_SIZE=0xF0000, RTM_SIZE = 0xDB000
+
+PSP_ENTRY TYPE=0, FILE=AmdPubKey.bin        
+PSP_ENTRY TYPE=1, FILE=PspBootLoader.sbin  
+PSP_ENTRY TYPE=8, FILE=SMUFirmware.sbin        
+PSP_ENTRY TYPE=3, FILE=PspRecovery.sbin         
+PSP_ENTRY TYPE=5, FILE=RtmPubSigned.key
+PSP_ENTRY TYPE=7, FILE=RTMSignature.bin,        Size = 0x100
+PSP_ENTRY TYPE=2, FILE=PspSecureOs.sbin
+#Customize Entry's Address to 0x40000, with "Address= 0x40000"
+PSP_ENTRY TYPE=4, FILE=PspNvram.bin, Address= 0x40000
+PSP_ENTRY TYPE=9, FILE=PspSecureDebug.Key
+#VALUE = 0, Secure part can't be unlocked, Value = 1, Secure part can be unlocked
+PSP_ENTRY TYPE=0xb, VALUE=0x1
+PSP_ENTRY TYPE=0xc, FILE=trustlets.bin
+PSP_ENTRY TYPE=0xd, FILE=Trustlet.tkn.cert
+PSP_ENTRY TYPE=0x5F, FILE=SmuScs.bin
+#PSP_ENTRY TYPE=6, FILE=BiosRTM.bin         <- This entry is added at end automatically by script

@@ -1,0 +1,69 @@
+## @file
+# 
+# Copyright (c) 2006 - 2011, Intel Corporation. All rights reserved.<BR>
+# This program and the accompanying materials                          
+# are licensed and made available under the terms and conditions of the BSD License         
+# which accompanies this distribution.  The full text of the license may be found at        
+# http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                           
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+#
+#  Module Name:
+#    EfiLdr.inf
+#
+#  Abstract:
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = EfiLoader
+  FILE_GUID                      = A9620E5C-5FA1-40b7-8B21-50B632F88F38
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 1.0
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  IntelFrameworkModulePkg/IntelFrameworkModulePkg.dec
+
+[LibraryClasses]
+  BaseLib
+  BaseMemoryLib
+  PrintLib
+  SerialPortLib
+
+[Sources]
+  Debug.h
+  PeLoader.h
+  Support.h
+  EfiLdrHandoff.h
+  EfiLdr.h
+  EfiLoader.c
+  Debug.c
+  PeLoader.c
+  Support.c
+  corebootmem.c
+  SeaBIOS/memmap.c
+  SeaBIOS/coreboot.c
+  SeaBIOS/memmap.h
+  SeaBIOS/types.h
+  SeaBIOS/util.h
+  #TianoDecompress.c
+  #TianoDecompress.h
+  LzmaDecompress.h
+
+[Guids]
+  gTianoCustomDecompressGuid
+
+[BuildOptions]
+      :*_*_*_CC_FLAGS = -DIMAGE_BUFFER_HIGH=$(IMAGE_BUFFER_HIGH)
+      :*_*_*_CC_FLAGS = -DSTART64CODESIZE=$(START64CODESIZE)
+      :*_*_*_CC_FLAGS = -DEFI64CODESIZE=$(EFI64CODESIZE)
+      :*_*_*_CC_FLAGS = -DDEBUG_PRINT_LEVEL=$(DEBUG_PRINT_LEVEL)
+  MSFT:*_*_*_CC_FLAGS = /wd4200
+  MSFT:*_*_*_CC_FLAGS = /wd4244
+  MSFT:*_*_*_CC_FLAGS = /wd4018
+  MSFT:*_*_*_CC_FLAGS = /wd4306
+  MSFT:*_*_*_CC_FLAGS = /wd4103

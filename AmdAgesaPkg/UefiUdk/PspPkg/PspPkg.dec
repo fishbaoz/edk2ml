@@ -1,0 +1,93 @@
+#;*****************************************************************************
+#;
+#; Copyright 2008 - 2014 ADVANCED MICRO DEVICES, INC.  All Rights Reserved.
+#;
+#; AMD is granting you permission to use this software (the Materials)
+#; pursuant to the terms and conditions of your Software License Agreement
+#; with AMD.  This header does *NOT* give you permission to use the Materials
+#; or any rights under AMD's intellectual property.  Your use of any portion
+#; of these Materials shall constitute your acceptance of those terms and
+#; conditions.  If you do not agree to the terms and conditions of the Software
+#; License Agreement, please do not use any portion of these Materials.
+#;
+#; CONFIDENTIALITY:  The Materials and all other information, identified as
+#; confidential and provided to you by AMD shall be kept confidential in
+#; accordance with the terms and conditions of the Software License Agreement.
+#;
+#; LIMITATION OF LIABILITY: THE MATERIALS AND ANY OTHER RELATED INFORMATION
+#; PROVIDED TO YOU BY AMD ARE PROVIDED "AS IS" WITHOUT ANY EXPRESS OR IMPLIED
+#; WARRANTY OF ANY KIND, INCLUDING BUT NOT LIMITED TO WARRANTIES OF
+#; MERCHANTABILITY, NONINFRINGEMENT, TITLE, FITNESS FOR ANY PARTICULAR PURPOSE,
+#; OR WARRANTIES ARISING FROM CONDUCT, COURSE OF DEALING, OR USAGE OF TRADE.
+#; IN NO EVENT SHALL AMD OR ITS LICENSORS BE LIABLE FOR ANY DAMAGES WHATSOEVER
+#; (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF PROFITS, BUSINESS
+#; INTERRUPTION, OR LOSS OF INFORMATION) ARISING OUT OF AMD'S NEGLIGENCE,
+#; GROSS NEGLIGENCE, THE USE OF OR INABILITY TO USE THE MATERIALS OR ANY OTHER
+#; RELATED INFORMATION PROVIDED TO YOU BY AMD, EVEN IF AMD HAS BEEN ADVISED OF
+#; THE POSSIBILITY OF SUCH DAMAGES.  BECAUSE SOME JURISDICTIONS PROHIBIT THE
+#; EXCLUSION OR LIMITATION OF LIABILITY FOR CONSEQUENTIAL OR INCIDENTAL DAMAGES,
+#; THE ABOVE LIMITATION MAY NOT APPLY TO YOU.
+#;
+#; AMD does not assume any responsibility for any errors which may appear in
+#; the Materials or any other related information provided to you by AMD, or
+#; result from use of the Materials or any related information.
+#;
+#; You agree that you will not reverse engineer or decompile the Materials.
+#;
+#; NO SUPPORT OBLIGATION: AMD is not obligated to furnish, support, or make any
+#; further information, software, technical information, know-how, or show-how
+#; available to you.  Additionally, AMD retains the right to modify the
+#; Materials at any time, without notice, and is not obligated to provide such
+#; modified Materials to you.
+#;
+#; U.S. GOVERNMENT RESTRICTED RIGHTS: The Materials are provided with
+#; "RESTRICTED RIGHTS." Use, duplication, or disclosure by the Government is
+#; subject to the restrictions as set forth in FAR 52.227-14 and
+#; DFAR252.227-7013, et seq., or its successor.  Use of the Materials by the
+#; Government constitutes acknowledgement of AMD's proprietary rights in them.
+#;
+#; EXPORT ASSURANCE:  You agree and certify that neither the Materials, nor any
+#; direct product thereof will be exported directly or indirectly, into any
+#; country prohibited by the United States Export Administration Act and the
+#; regulations thereunder, without the required authorization from the U.S.
+#; government nor will be used for any purpose prohibited by the same.
+#;*****************************************************************************
+
+[Defines]
+  DEC_SPECIFICATION     = 0x00010005
+  PACKAGE_NAME          = PspPkg
+  PACKAGE_GUID          = 2e08fc0d-b2f4-4d24-b6b8-223bb5c7bc92
+  PACKAGE_VERSION       = 0.1
+
+[Includes] 
+  Include 
+  #PSP platform stuffs under Addendum
+  #Comment if PSP platform codes have been added
+  Addendum/Include
+
+[LibraryClasses]
+  PspBaseLib|Include/Library/PspBaseLib.h
+  PspfTpmLib|Include/Library/PspfTpmLib.h
+  PspMbox|Include/Library/PspMbox.h
+
+  #Comment if PSP platform codes have been added
+  PspStorageLib|Addendum/Include/Library/PspStorageLib.h
+
+[Guids]
+  gPspCorruptDetectGuid =   {0x2347c335, 0x6044, 0x48c2, 0x99, 0x8e, 0xad, 0x10, 0x83, 0x71, 0x2, 0x93}
+[Ppis]
+  giTpmPpiGuid =  {0x91774185, 0xf72d, 0x467e, {0x93, 0x39, 0xe0, 0x8, 0xdb, 0xae, 0xe, 0x14}}
+
+[Protocols]
+  giTpmProtocolGuid = {0xac234e04, 0xb036, 0x476c, {0x91, 0x66, 0xbe, 0x47, 0x52, 0xa0, 0x95, 0x9}}
+  giTpmSmmProtocolGuid = {0xf517b700, 0x1467, 0x4b50, {0xb0, 0xe8, 0xa2, 0x05, 0x39, 0xaf, 0xff, 0x99 }}
+  gPspResumeServiceProtocolGuid = {0x49e7712, 0xd66a, 0x4e0d, {0xb0, 0x24, 0x7, 0x59, 0x40, 0x14, 0x3e, 0x42}}
+
+  #Comment if PSP platform codes have been added
+  gPspStorageProtocolGuid = {0xc3ae78c0, 0x2995, 0x493d, {0xbb, 0xda, 0xc4, 0xc6, 0x41, 0x40, 0xcc, 0x10}}
+  gPspPlatformProtocolGuid = {0xccf14a29, 0x37e0, 0x48ad, { 0x90, 0x5, 0x1f, 0x89, 0x62, 0x2f, 0xb7, 0x98 }}
+
+[PcdsFixedAtBuild]
+
+
+

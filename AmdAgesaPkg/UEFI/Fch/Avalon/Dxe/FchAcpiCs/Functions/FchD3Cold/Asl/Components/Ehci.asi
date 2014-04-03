@@ -1,0 +1,819 @@
+
+  OperationRegion(USPM, SystemMemory, \_SB.USBB, 0x001000)
+  Field(USPM, AnyAcc, NoLock, Preserve)
+  {
+    Offset (0x04),
+    FchEhci1Enable, 8,
+    FchEhci2Enable, 8,
+    FchEhci3Enable, 8,
+    FchXhciEnable, 8,
+    Offset (0x09),
+    FchUsbMsiEnable, 8,
+    Offset (0x12),
+    FchUserDefineEhciSsid, 32,
+    Offset (0x1C),
+    FchEhci1PhyPort0, 8,
+    FchEhci1PhyPort1, 8,
+    FchEhci1PhyPort2, 8,
+    FchEhci1PhyPort3, 8,
+    ,8,
+    FchEhci2PhyPort0, 8,
+    FchEhci2PhyPort1, 8,
+    FchEhci2PhyPort2, 8,
+    FchEhci2PhyPort3, 8,
+    ,8,
+    FchEhci3PhyPort0, 8,
+    FchEhci3PhyPort1, 8,
+    FchEhci3PhyPort2, 8,
+    FchEhci3PhyPort3, 8,
+    FchXhci0PhyPort0, 8,
+    FchXhci0PhyPort1, 8
+  }
+
+//EHC1
+  Scope(\_SB.PCI0) {
+    PowerResource(P0E1, 0, 0) {
+      Method(_STA) {
+        Return(1)
+      }
+
+      Method(_ON) {
+        Store(0x51, IO80)
+      }
+
+      Method(_OFF) {
+        Store(0x52, IO80)
+        DeviceEnterD3Cold (DeviceControlEhci1)
+        FchS0I3ReadyCheck()
+      }
+    }
+    PowerResource(P3E1, 0, 0) {
+      Method(_STA) {
+        Return(1)
+      }
+
+      Method(_ON) {
+        Store(0x54, IO80)
+      }
+
+      Method(_OFF) {
+        Store(0x55, IO80)
+      }
+    }
+  }
+
+  Scope(\_SB.PCI0.EHC1)
+  {
+    Name(_PR0, Package() {P0E1})
+    Name(_PR3, Package() {P3E1})
+
+    OperationRegion (PCI1, PCI_Config, 0x00, 0x100)
+    Field(PCI1, AnyAcc, NoLock, Preserve) {
+      Offset (0x04),
+      , 1,
+      U104, 1,                                        // Memory Space Accesses
+      Offset (0x10),
+      FchEhci1Bar, 32,
+      Offset (0x2C),
+      FchEhciSsidRegister1, 32,
+      Offset (0x50),
+      FchEhciMiscControl1, 32,
+      Offset (0x54),
+      FchEhciSpare1, 32
+    }
+
+    Method (FchEhci1PhySetting, 2) {
+      Store ( FchEhci1Bar, Local3 )
+      OperationRegion( FchEhciPhyBar1, SystemMemory, Local3, 0x100)
+      Field( FchEhciPhyBar1, ByteAcc, NoLock, Preserve) {
+        Offset(0xB4),
+        FchEhciPhyControl1, 32,
+      }
+
+      ShiftLeft ( Arg0, 13, Local3 )                     // Local3 Port#
+      Store ( FchEhciPhyControl1, Local2 )
+      And ( Local2, 0xFFFE0000, Local2 )
+      Or ( Local2, Local3, Local4 )
+      Or ( Local4, Arg1, FchEhciPhyControl1 )
+      Store ( FchEhciPhyControl1, Local0 )              // Tigger
+      And (Local2, 0xFFFFEFFF, Local2 )
+      Or (Local2, 0x00001000, FchEhciPhyControl1 )
+    }
+
+    Method ( FchCheckUtmiB17ActiveEhci1, 0 ) {
+      Store ( FchEhci1Bar, Local2 )
+      OperationRegion( FchEhciUtmiActBar1, SystemMemory, Local2, 0x100)
+      Field( FchEhciUtmiActBar1, ByteAcc, NoLock, Preserve) {
+        Offset(0xB4),
+        FchEhciUtmiActControl1, 32,
+      }
+      Store ( 0 , Local2 )
+      Store ( FchEhciUtmiActControl1, Local1 )
+      And ( Local1, 0x00020000, Local1)
+      While ( LEqual ( Local1, 0x00020000 ) )
+      {
+        Store ( FchEhciUtmiActControl1, Local1 )
+        And ( Local1, 0x00020000, Local1 )
+        Stall (2)
+        Increment ( Local2 )
+        If ( LGreater ( Local2, 10)) { Return }
+      }
+    }
+
+    Method (FchHsslewSettingEhci1, 1) {
+      Store ( FchEhci1Bar, Local2 )
+      OperationRegion( FchEhciHsslewBar1, SystemMemory, Local2, 0x100)
+      Field( FchEhciHsslewBar1, ByteAcc, NoLock, Preserve) {
+        Offset(0xB4),
+        FchEhciHsslewControl1, 32,
+      }
+      ShiftLeft ( Arg0, 13, Local3 )                     // Local3 Port#
+      Store ( FchEhciHsslewControl1, Local2 )
+      And ( Local2, 0xFFFEC000, Local2 )
+      Or ( Local2, Local3, Local4 )
+      Or ( Local4, 0x00001302, FchEhciHsslewControl1 )
+      FchCheckUtmiB17ActiveEhci1 ()
+      Store ( FchEhciHsslewControl1, Local2 )
+      And ( Local2, 0xFFFEC000, Local2 )
+      Or ( Local2, Local3, Local4 )
+      Or ( Local4, 0x00302, FchEhciHsslewControl1 )
+      FchCheckUtmiB17ActiveEhci1 ()
+      Store ( FchEhciHsslewControl1, Local2 )
+      And ( Local2, 0xFFFEC000, Local2 )
+      Or ( Local2, Local3, Local4 )
+      Or ( Local4, 0x00001000, FchEhciHsslewControl1 )
+    }
+
+    Method ( FchInitMidUsbEhci1, 0, Serialized ) {
+      If ( LNotEqual ( FchEhci1Enable, 0 ) ) {
+        Store ( FchEhci1Bar, Local0 )
+        OperationRegion(FchEhci1BarSpace, SystemMemory, Local0, 0x100)
+        Field(FchEhci1BarSpace, ByteAcc, NoLock, Preserve) {
+          Offset(0xA4),
+          FchEhciPacketBufferThreshold1, 32,
+          Offset(0xA8),
+          FchEhciPhyStatus1, 32, 
+          Offset(0xB0),
+          FchEhciSimControl1, 32,
+          Offset(0xB4),
+          FchEhciUtmiControl1, 32,
+          Offset(0xBC),
+          FchEhciEorMiscControl1, 32,
+          FchEhciCommonPhyCal1, 32,
+          FchEhciPhyControlReg1_1, 32,
+          Offset(0xD0),
+          FchEhciPhyControlReg1_2, 32,
+          FchEhciPhyControlReg1_3, 32
+        }
+        If ( LNotEqual ( FchUserDefineEhciSsid, 0 )) { store( FchUserDefineEhciSsid, FchEhciSsidRegister1) }
+        //
+        // IN AND OUT DATA PACKET FIFO THRESHOLD
+        // EHCI BAR 0xA4 //IN threshold bits[7:0]=0x40 //OUT threshold bits[23:16]=0x40
+        //
+        Store ( FchEhciPacketBufferThreshold1, Local0 )
+        And (Local0, 0xFF00FF00, Local0 )
+        Or (Local0, 0x00400040, FchEhciPacketBufferThreshold1 )
+        Store ( FchEhciEorMiscControl1, Local0 )
+        And (Local0, 0xFFFFAFFF, Local0 )
+        Or (Local0, 0x00005000, FchEhciEorMiscControl1)
+        Store ( FchEhciSimControl1, Local0 )
+        And (Local0, 0xFFFFFFDF, Local0 )
+        Or (Local0, 0x00000020, FchEhciSimControl1 )
+        // Enable Global Clock Gating (BIT14
+        // Enable adding extra flops to PHY rsync path
+        Store ( 0, Local0 )
+        While ( LNotEqual ( 4, Local0)) {
+          If ( LEqual ( 0, Local0 ) ) { Store ( FchEhci1PhyPort0, Local1) }
+          If ( LEqual ( 1, Local0 ) ) { Store ( FchEhci1PhyPort1, Local1) }
+          If ( LEqual ( 2, Local0 ) ) { Store ( FchEhci1PhyPort2, Local1) }
+          If ( LEqual ( 3, Local0 ) ) { Store ( FchEhci1PhyPort3, Local1) }
+            FchEhci1PhySetting ( Local0, Local1 )     // EHCI1 PHY setting
+            FchHsslewSettingEhci1 ( Local0 )             // EHCI1 HSSLEW setting
+            Increment ( Local0 )
+        }
+        // Step 3rd
+        Store ( FchEhciPhyControlReg1_2, Local2 )
+        And ( Local2, 0xFFFFFFF0, Local2 )
+        Or ( Local2, 0x06, FchEhciPhyControlReg1_2 )
+        Store ( FchEhciPhyControlReg1_1, Local2 )
+        And ( Local2, 0x00FF0000, Local2 )
+        Or ( Local2, 0x90001221, FchEhciPhyControlReg1_1 )
+        Store ( FchEhciPhyControlReg1_3, Local2 )
+        And ( Local2, 0xFFFFFF3D, Local2 )
+        Or ( Local2, 0x00000040, FchEhciPhyControlReg1_3 )
+
+        Stall (1)                                          //? Not sure how long it is
+        Store ( FchEhciPhyControlReg1_3, Local2 )
+        And ( Local2, 0xFFFFFFFD, Local2 )
+        Or ( Local2, 0x00000002, FchEhciPhyControlReg1_3 )
+        Stall (2)                                          //? Not sure how long it is
+        Store ( FchEhciPhyControlReg1_3, Local2 )
+        And ( Local2, 0xFFFFFFFD, Local2 )
+        Or ( Local2, 0x00000000, FchEhciPhyControlReg1_3 )
+        Store ( FchEhciCommonPhyCal1, Local2 )
+        Or ( Local2, 0x00010000, FchEhciCommonPhyCal1 )
+        //Set EHCI_pci_configx50[6]='1' to disable EHCI MSI support (6)
+        // EHCI Async Park Mode (8-11,12-15,17)
+        // Extend InterPacket Gap (21)
+        // EHCI PCI config register 50h bit 26 to `1'. (26)
+        // Enabling EHCI Async Stop Enhancement (29)
+        // Set EHCI_pci_configx50[31]='1'
+        //  FchEhciMiscControl1 (X0X00X00) (00X000X0) (XXXXXXXXX) (0X000000)
+        Store ( FchEhciMiscControl1, Local2 )
+        And ( Local2, 0x5BDD00BF, Local2 )
+        Or ( Local2, 0xA4221140, FchEhciMiscControl1 )
+        //
+        // USB Delay A-Link Express L1 State
+        // PING Response Fix Enable EHCI_PCI_Config  x54[1] = 1
+        // Enable empty list mode. x54[3]
+        // Enable "L1 Early Exit" functionality. 0x54 [6:5] = 0x3 0x54 [9:7] = 0x4
+        // EHCI PING Response Fix Enable 0x54 [1] = 0x1
+        // EHCI Controller Micro-Frame Counter Sync Enhancement 0x54 [4] = 0x1
+        // FchEhciSpare1 (00000000) (00000000) (00000000) (0XXXXX0X0)
+        Store ( FchEhciSpare1, Local2 )
+        And ( Local2, 0x00000004, Local2 )
+        Or ( Local2, 0x00000027, FchEhciSpare1 )
+
+        if ( LEqual ( 1, FchUsbMsiEnable )) {
+          Store ( FchEhciMiscControl1, Local2 )
+          And ( Local2, 0xFFFFFFBF, FchEhciMiscControl1 )
+        }
+        // LS connection can't wake up system from S3/S4/S5 when EHCI owns the port - Fix (4)
+        // (EHCI_REG54 BIT12) Enable cycle-based EHCI PIE Handshake Ready (12)
+        // EHCI lMU Hangs when Run/Stop is Set First and PDC is Enabled Near End uFrame (11, 15, 16, 17, 18, 19)
+        // UBTS378555 (EHCI_REG54 BIT20) EHCI data cache using wrong buffer pointer on page-cross (20)
+        // UBTS378549 (EHCI_REG54 BIT21) EHCI Frame list processing enhancement (21)
+        // UBTS378550 (EHCI_REG54 BIT22) Unexpected OS driver TD setup causing EHCI to hang (22)
+        // UBTS378553 (EHCI_REG54 BIT24) Speed field enhancement (24)
+        // UBTS378544 (EHCI_REG54 BIT25) Reset Connect timer when disconnecting (25)
+        // UBTS376608 (EHCI_REG54 BIT27, EHCI_REG50 BIT0) EHCI_PME should be gated by PME enable bit (27)
+        // UBTS377802 (EHCI_REG54 BIT28) EHCI need to support de-linking async active QH (28)
+        // UBTS382275 (EHCI_REG54 BIT29) EHCI QTD with SOF (29)
+        // Enhance EHCI/OHCI resume/disconnect detection timer (EHCI_REG54 BIT30)
+        // FchEhciSpare1 (0XXXX0XX) (0XXXXXXX) (X00XX000) (000X0000)
+        Store ( FchEhciSpare1, Local2 )
+        And ( Local2, 0x848067EF, Local2 )
+        Or ( Local2, 0x7B7F9810, FchEhciSpare1 )
+        Store ( FchEhciMiscControl1, Local2 )
+        Or ( Local2, 0x00080000, FchEhciMiscControl1)
+
+        //
+        // ISO device CRC false error detection
+        //
+        Store ( 0, Local0 )
+        While ( LNotEqual ( 4, Local0))
+        {
+          ShiftLeft ( Local0, 13, Local3 )                 // Local3 Port#  
+          Store ( FchEhciUtmiControl1, Local2 )
+          And ( Local2, 0xFFFE0000, Local2 )
+          Or ( Local2, Local3, Local4 )
+          Or ( Local4, 0x00001380, FchEhciUtmiControl1 )
+          Store ( FchEhciPhyStatus1 , Local2 )
+          ShiftLeft ( Local0, 4, Local5 )
+          ShiftRight ( Local2, Local5, Local2 )
+          And ( Local2, 0xF8, Local2 )
+          Or (Local2, 0x05, Local2 )
+          Store ( FchEhciUtmiControl1, Local5 )
+          And ( Local5, 0xFFFE0000, Local5 )
+          Or ( Local2, Local3, Local4 )                    // Port#
+          Or ( Local4, 0x00001380, Local4 )
+          Or ( Local4, Local5, FchEhciUtmiControl1 )
+          Store ( FchEhciUtmiControl1, Local2 )
+          And (Local2, 0xFFFFEFFF, FchEhciUtmiControl1 )
+          Store ( FchEhciUtmiControl1, Local2 )
+          Or (Local2, 0x00001000, FchEhciUtmiControl1 )
+          Increment ( Local0 )
+        }
+      }
+    }
+    Method(_DSW,3)
+    {
+      If(Arg0)
+      {
+      }
+      Else
+      {
+      }
+    }
+    Method(_S0W,0)
+    {
+      Return(4)
+    }
+    Method(_PS0,0)
+    {
+      Store(0x50, IO80)
+      DeviceEnterD0 (DeviceControlEhci1)
+      FchInitMidUsbEhci1 ()
+      FchS0I3ReadyCheck()  
+    }
+    Method(_PS3,0)
+    {
+      Store(0x53, IO80)
+      DeviceEnterD3Hot (DeviceControlEhci1)
+    }
+  }
+//EHC2
+  Scope(\_SB.PCI0) {
+    PowerResource(P0E2, 0, 0) {
+      Method(_STA) {
+        Return(1)
+      }
+
+      Method(_ON) {
+        Store(0x61, IO80)
+      }
+
+      Method(_OFF) {
+        Store(0x62, IO80)
+        DeviceEnterD3Cold (DeviceControlEhci2)
+        FchS0I3ReadyCheck()
+      }
+    }
+    PowerResource(P3E2, 0, 0) {
+      Method(_STA) {
+        Return(1)
+      }
+
+      Method(_ON) {
+        Store(0x64, IO80)
+      }
+
+      Method(_OFF) {
+        Store(0x65, IO80)
+      }
+    }
+  }
+
+  Scope(\_SB.PCI0.EHC2)
+  {
+    Name(_PR0, Package() {P0E2})
+    Name(_PR3, Package() {P3E2})
+
+    OperationRegion (PCI2, PCI_Config, 0x00, 0x100)
+    Field(PCI2, AnyAcc, NoLock, Preserve) {
+      Offset (0x10),
+      FchEhci2Bar, 32,
+      Offset (0x2C),
+      FchEhciSsidRegister2, 32,
+      Offset (0x50),
+      FchEhciMiscControl2, 32,
+      Offset (0x54),
+      FchEhciSpare2, 32
+    }
+
+    Method (FchEhci2PhySetting, 2) {
+      Store ( FchEhci2Bar, Local3 )
+      OperationRegion(FchEhciPhyBar2, SystemMemory, Local3, 0x100)
+      Field(FchEhciPhyBar2, ByteAcc, NoLock, Preserve) {
+        Offset(0xB4),
+        FchEhciPhyControl2, 32,
+      }
+
+      ShiftLeft ( Arg0, 13, Local3 )                       // Local3 Port#
+      Store ( FchEhciPhyControl2, Local2 )
+      And ( Local2, 0xFFFE0000, Local2 )
+      Or ( Local2, Local3, Local4 )
+      Or ( Local4, Arg1, FchEhciPhyControl2 )
+      Store ( FchEhciPhyControl2, Local0 )                 // Tigger
+      And (Local2, 0xFFFFEFFF, Local2 )
+      Or (Local2, 0x00001000, FchEhciPhyControl2 )
+    }
+
+    Method ( FchCheckUtmiB17ActiveEhci2, 0 ) {
+      Store ( FchEhci2Bar, Local2 )
+      OperationRegion( FchEhciUtmiActBar2, SystemMemory, Local2, 0x100)
+      Field( FchEhciUtmiActBar2, ByteAcc, NoLock, Preserve) {
+        Offset(0xB4),
+        FchEhciUtmiActControl2, 32,
+      }
+      Store ( 0 , Local2 )
+      Store ( FchEhciUtmiActControl2, Local1 )
+      And ( Local1, 0x00020000, Local1)
+      While ( LEqual ( Local1, 0x00020000 ) )
+      {
+        Store ( FchEhciUtmiActControl2, Local1 )
+        And ( Local1, 0x00020000, Local1 )
+        Stall (2)
+        Increment ( Local2 )
+        If ( LGreater ( Local2, 10)) { Return }
+      }
+    }
+
+    Method ( FchHsslewSettingEhci2, 1) {
+      Store ( FchEhci2Bar, Local2 )
+      OperationRegion( FchEhciHsslewBar2, SystemMemory, Local2, 0x100)
+      Field( FchEhciHsslewBar2, ByteAcc, NoLock, Preserve) {
+        Offset(0xB4),
+        FchEhciHsslewControl2, 32,
+      }
+      ShiftLeft ( Arg0, 13, Local3 )                       // Local3 Port#
+      Store ( FchEhciHsslewControl2, Local2 )
+      And ( Local2, 0xFFFEC000, Local2 )
+      Or ( Local2, Local3, Local4 )
+      Or ( Local4, 0x00001302, FchEhciHsslewControl2 )
+      FchCheckUtmiB17ActiveEhci2 ()
+      Store ( FchEhciHsslewControl2, Local2 )
+      And ( Local2, 0xFFFEC000, Local2 )
+      Or ( Local2, Local3, Local4 )
+      Or ( Local4, 0x00302, FchEhciHsslewControl2 )
+      FchCheckUtmiB17ActiveEhci2 ()
+      Store ( FchEhciHsslewControl2, Local2 )
+      And ( Local2, 0xFFFEC000, Local2 )
+      Or ( Local2, Local3, Local4 )
+      Or ( Local4, 0x00001000, FchEhciHsslewControl2 )
+    }
+    Method ( FchInitMidUsbEhci2, 0, Serialized ) {
+      If ( LNotEqual ( FchEhci2Enable, 0 ) ) {
+        Store ( FchEhci2Bar, Local0 )
+        OperationRegion( FchEhci2BarSpace, SystemMemory, Local0, 0x100)
+        Field( FchEhci2BarSpace, ByteAcc, NoLock, Preserve) {
+          Offset(0xA4),
+          FchEhciPacketBufferThreshold2, 32,
+          Offset(0xA8),
+          FchEhciPhyStatus2, 32, 
+          Offset(0xB0),
+          FchEhciSimControl2, 32,
+          Offset(0xB4),
+          FchEhciUtmiControl2, 32,
+          Offset(0xBC),
+          FchEhciEorMiscControl2, 32,
+          FchEhciCommonPhyCal2, 32,
+          FchEhciPhyControlReg2_1, 32,
+          Offset(0xD0),
+          FchEhciPhyControlReg2_2, 32,
+          FchEhciPhyControlReg2_3, 32
+        }
+        If ( LNotEqual ( FchUserDefineEhciSsid, 0 )) { store( FchUserDefineEhciSsid, FchEhciSsidRegister2) }
+        //
+        // IN AND OUT DATA PACKET FIFO THRESHOLD
+        // EHCI BAR 0xA4 //IN threshold bits[7:0]=0x40 //OUT threshold bits[23:16]=0x40
+        //
+        Store ( FchEhciPacketBufferThreshold2, Local0 )
+        And ( Local0, 0xFF00FF00, Local0 )
+        Or ( Local0, 0x00400040, FchEhciPacketBufferThreshold2 )
+        Store ( FchEhciEorMiscControl2, Local0 )
+        And ( Local0, 0xFFFFAFFF, Local0 )
+        Or ( Local0, 0x00005000, FchEhciEorMiscControl2 )
+        Store ( FchEhciSimControl2 , Local0 )
+        And ( Local0, 0xFFFFFFDF, Local0 )
+        Or ( Local0, 0x00000020, FchEhciSimControl2 )
+        // Enable Global Clock Gating (BIT14
+        // Enable adding extra flops to PHY rsync path
+        Store ( 0, Local0 )
+        While ( LNotEqual ( 4, Local0)) {
+          If ( LEqual ( 0, Local0 ) ) { Store ( FchEhci2PhyPort0, Local1) }
+          If ( LEqual ( 1, Local0 ) ) { Store ( FchEhci2PhyPort1, Local1) }
+          If ( LEqual ( 2, Local0 ) ) { Store ( FchEhci2PhyPort2, Local1) }
+          If ( LEqual ( 3, Local0 ) ) { Store ( FchEhci2PhyPort3, Local1) }
+            FchEhci2PhySetting ( Local0, Local1 )          // EHCI2 PHY setting
+            FchHsslewSettingEhci2 ( Local0 )               // EHCI2 HSSLEW setting
+            Increment ( Local0 )
+        }
+        // Step 3rd
+        Store ( FchEhciPhyControlReg2_2, Local2 )
+        And ( Local2, 0xFFFFFFF0, Local2 )
+        Or ( Local2, 0x06, FchEhciPhyControlReg2_2 )
+        Store ( FchEhciPhyControlReg2_1, Local2 )
+        And ( Local2, 0x00FF0000, Local2 )
+        Or ( Local2, 0x90001221, FchEhciPhyControlReg2_1 )
+        Store ( FchEhciPhyControlReg2_3, Local2 )
+        And ( Local2, 0xFFFFFF3D, Local2 )
+        Or ( Local2, 0x00000040, FchEhciPhyControlReg2_3 )
+
+        Stall (1)                                          //? Not sure how long it is
+        Store ( FchEhciPhyControlReg2_3, Local2 )
+        And ( Local2, 0xFFFFFFFD, Local2 )
+        Or ( Local2, 0x00000002, FchEhciPhyControlReg2_3 )
+        Stall (2)                                          //? Not sure how long it is
+        Store ( FchEhciPhyControlReg2_3, Local2 )
+        And ( Local2, 0xFFFFFFFD, Local2 )
+        Or ( Local2, 0x00000000, FchEhciPhyControlReg2_3 )
+        Store ( FchEhciCommonPhyCal2, Local2 )
+        Or ( Local2, 0x00010000, FchEhciCommonPhyCal2 )
+        Store ( FchEhciMiscControl2, Local2 )
+        And ( Local2, 0x5BDD00BF, Local2 )
+        Or ( Local2, 0xA4221140, FchEhciMiscControl2 )
+        Store ( FchEhciSpare2, Local2 )
+        And ( Local2, 0x00000004, Local2 )
+        Or ( Local2, 0x00000027, FchEhciSpare2 )
+
+        if ( LEqual ( 1, FchUsbMsiEnable )) {
+          Store ( FchEhciMiscControl2, Local2 )
+          And ( Local2, 0xFFFFFFBF, FchEhciMiscControl2 )
+        }
+        Store ( FchEhciSpare2, Local2 )
+        And ( Local2, 0x848067EF, Local2 )
+        Or ( Local2, 0x7B7F9810, FchEhciSpare2 )
+        Store ( FchEhciMiscControl2, Local2 )
+        Or ( Local2, 0x00080000, FchEhciMiscControl2)
+
+        //
+        // ISO device CRC false error detection
+        //
+        Store ( 0, Local0 )
+        While ( LNotEqual ( 4, Local0))
+        {
+          ShiftLeft ( Local0, 13, Local3 )                 // Local3 Port#  
+          Store ( FchEhciUtmiControl2, Local2 )
+          And ( Local2, 0xFFFE0000, Local2 )
+          Or ( Local2, Local3, Local4 )
+          Or ( Local4, 0x00001380, FchEhciUtmiControl2 )
+          Store ( FchEhciPhyStatus2 , Local2 )
+          ShiftLeft ( Local0, 4, Local5 )
+          ShiftRight ( Local2, Local5, Local2 )
+          And ( Local2, 0xF8, Local2 )
+          Or (Local2, 0x05, Local2 )
+          Store ( FchEhciUtmiControl2, Local5 )
+          And ( Local5, 0xFFFE0000, Local5 )
+          Or ( Local2, Local3, Local4 )                    // Port#
+          Or ( Local4, 0x00001380, Local4 )
+          Or ( Local4, Local5, FchEhciUtmiControl2 )
+          Store ( FchEhciUtmiControl2, Local2 )
+          And (Local2, 0xFFFFEFFF, FchEhciUtmiControl2 )
+          Store ( FchEhciUtmiControl2, Local2 )
+          Or (Local2, 0x00001000, FchEhciUtmiControl2 )
+          Increment ( Local0 )
+        }
+      }
+    }
+
+    Method(_DSW,3)
+    {
+      If(Arg0)
+      {
+      }
+      Else
+      {
+      }
+    }
+    Method(_S0W,0)
+    {
+      Return(4)
+    }
+    Method(_PS0,0)
+    {
+      Store(0x60, IO80)
+      DeviceEnterD0 (DeviceControlEhci2)
+      FchInitMidUsbEhci2 ()
+      FchS0I3ReadyCheck()
+    }
+    Method(_PS3,0)
+    {
+      Store(0x63, IO80)
+      DeviceEnterD3Hot (DeviceControlEhci2)
+    }
+  }
+//EHC3
+  Scope(\_SB.PCI0) {
+    PowerResource(P0E3, 0, 0) {
+      Method(_STA) {
+        Return(1)
+      }
+
+      Method(_ON) {
+        Store(0x71, IO80)
+      }
+
+      Method(_OFF) {
+        Store(0x72, IO80)
+        DeviceEnterD3Cold (DeviceControlEhci3)
+        FchS0I3ReadyCheck()
+      }
+    }
+    PowerResource(P3E3, 0, 0) {
+      Method(_STA) {
+        Return(1)
+      }
+
+      Method(_ON) {
+        Store(0x74, IO80)
+      }
+
+      Method(_OFF) {
+        Store(0x75, IO80)
+      }
+    }
+  }
+
+  Scope(\_SB.PCI0.EHC3)
+  {
+    Name(_PR0, Package() {P0E3})
+    Name(_PR3, Package() {P3E3})
+
+    OperationRegion (PCI3, PCI_Config, 0x00, 0x100)
+    Field(PCI3, AnyAcc, NoLock, Preserve) {
+      Offset (0x10),
+      FchEhci3Bar, 32,
+      Offset (0x2C),
+      FchEhciSsidRegister3, 32,
+      Offset (0x50),
+      FchEhciMiscControl3, 32,
+      Offset (0x54),
+      FchEhciSpare3, 32
+    }
+
+    Method (FchEhci3PhySetting, 2) {
+      Store ( FchEhci3Bar, Local3 )
+      OperationRegion(FchEhciPhyBar3, SystemMemory, Local3, 0x100)
+      Field(FchEhciPhyBar3, ByteAcc, NoLock, Preserve) {
+        Offset(0xB4),
+        FchEhciPhyControl3, 32,
+      }
+
+      ShiftLeft ( Arg0, 13, Local3 )                       // Local3 Port#
+      Store ( FchEhciPhyControl3, Local2 )
+      And ( Local2, 0xFFFE0000, Local2 )
+      Or ( Local2, Local3, Local4 )
+      Or ( Local4, Arg1, FchEhciPhyControl3 )
+      Store ( FchEhciPhyControl3, Local0 )                 // Tigger
+      And (Local2, 0xFFFFEFFF, Local2 )
+      Or (Local2, 0x00001000, FchEhciPhyControl3 )
+    }
+
+    Method ( FchCheckUtmiB17ActiveEhci3, 0 ) {
+      Store ( FchEhci3Bar, Local2 )
+      OperationRegion( FchEhciUtmiActBar3, SystemMemory, Local2, 0x100)
+      Field( FchEhciUtmiActBar3, ByteAcc, NoLock, Preserve) {
+        Offset(0xB4),
+        FchEhciUtmiActControl3, 32,
+      }
+      Store ( 0 , Local2 )
+      Store ( FchEhciUtmiActControl3, Local1 )
+      And ( Local1, 0x00020000, Local1)
+      While ( LEqual ( Local1, 0x00020000 ) )
+      {
+        Store ( FchEhciUtmiActControl3, Local1 )
+        And ( Local1, 0x00020000, Local1 )
+        Stall (2)
+        Increment ( Local2 )
+        If ( LGreater ( Local2, 10)) { Return }
+      }
+    }
+
+    Method ( FchHsslewSettingEhci3, 1) {
+      Store ( FchEhci3Bar, Local2 )
+      OperationRegion( FchEhciHsslewBar3, SystemMemory, Local2, 0x100)
+      Field( FchEhciHsslewBar3, ByteAcc, NoLock, Preserve) {
+        Offset(0xB4),
+        FchEhciHsslewControl3, 32,
+      }
+      ShiftLeft ( Arg0, 13, Local3 )                       // Local3 Port#
+      Store ( FchEhciHsslewControl3, Local2 )
+      And ( Local2, 0xFFFEC000, Local2 )
+      Or ( Local2, Local3, Local4 )
+      Or ( Local4, 0x00001302, FchEhciHsslewControl3 )
+      FchCheckUtmiB17ActiveEhci3 ()
+      Store ( FchEhciHsslewControl3, Local2 )
+      And ( Local2, 0xFFFEC000, Local2 )
+      Or ( Local2, Local3, Local4 )
+      Or ( Local4, 0x00302, FchEhciHsslewControl3 )
+      FchCheckUtmiB17ActiveEhci3 ()
+      Store ( FchEhciHsslewControl3, Local2 )
+      And ( Local2, 0xFFFEC000, Local2 )
+      Or ( Local2, Local3, Local4 )
+      Or ( Local4, 0x00001000, FchEhciHsslewControl3 )
+    }
+    Method ( FchInitMidUsbEhci3, 0, Serialized ) {
+      If ( LNotEqual ( FchEhci3Enable, 0 ) ) {
+        If ( LEqual ( FchXhciEnable, 0 ) ) {
+          Store ( FchEhci3Bar, Local0 )
+          OperationRegion( FchEhci3BarSpace, SystemMemory, Local0, 0x100)
+          Field( FchEhci3BarSpace, ByteAcc, NoLock, Preserve) {
+            Offset(0xA4),
+            FchEhciPacketBufferThreshold3, 32,
+            Offset(0xA8),
+            FchEhciPhyStatus3, 32, 
+            Offset(0xB0),
+            FchEhciSimControl3, 32,
+            Offset(0xB4),
+            FchEhciUtmiControl3, 32,
+            Offset(0xBC),
+            FchEhciEorMiscControl3, 32,
+            FchEhciCommonPhyCal3, 32,
+            FchEhciPhyControlReg3_1, 32,
+            Offset(0xD0),
+            FchEhciPhyControlReg3_2, 32,
+            FchEhciPhyControlReg3_3, 32
+          }
+          If ( LNotEqual ( FchUserDefineEhciSsid, 0 )) { store( FchUserDefineEhciSsid, FchEhciSsidRegister3) }
+          //
+          // IN AND OUT DATA PACKET FIFO THRESHOLD
+          // EHCI BAR 0xA4 //IN threshold bits[7:0]=0x40 //OUT threshold bits[23:16]=0x40
+          //
+          Store ( FchEhciPacketBufferThreshold3, Local0 )
+          And ( Local0, 0xFF00FF00, Local0 )
+          Or ( Local0, 0x00400040, FchEhciPacketBufferThreshold3 )
+          Store ( FchEhciEorMiscControl3, Local0 )
+          And ( Local0, 0xFFFFAFFF, Local0 )
+          Or ( Local0, 0x00005000, FchEhciEorMiscControl3 )
+          Store ( FchEhciSimControl3 , Local0 )
+          And ( Local0, 0xFFFFFFDF, Local0 )
+          Or ( Local0, 0x00000020, FchEhciSimControl3 )
+          // Enable Global Clock Gating (BIT14
+          // Enable adding extra flops to PHY rsync path
+          Store ( 0, Local0 )
+          While ( LNotEqual ( 4, Local0)) {
+            If ( LEqual ( 0, Local0 ) ) { Store ( FchEhci3PhyPort0, Local1) }
+            If ( LEqual ( 1, Local0 ) ) { Store ( FchEhci3PhyPort1, Local1) }
+            If ( LEqual ( 2, Local0 ) ) { Store ( FchEhci3PhyPort2, Local1) }
+            If ( LEqual ( 3, Local0 ) ) { Store ( FchEhci3PhyPort3, Local1) }
+              FchEhci3PhySetting ( Local0, Local1 )          // EHCI2 PHY setting
+              FchHsslewSettingEhci3 ( Local0 )               // EHCI2 HSSLEW setting
+              Increment ( Local0 )
+          }
+          // Step 3rd
+          Store ( FchEhciPhyControlReg3_2, Local2 )
+          And ( Local2, 0xFFFFFFF0, Local2 )
+          Or ( Local2, 0x06, FchEhciPhyControlReg3_2 )
+          Store ( FchEhciPhyControlReg3_1, Local2 )
+          And ( Local2, 0x00FF0000, Local2 )
+          Or ( Local2, 0x90001221, FchEhciPhyControlReg3_1 )
+          Store ( FchEhciPhyControlReg3_3, Local2 )
+          And ( Local2, 0xFFFFFF3D, Local2 )
+          Or ( Local2, 0x00000040, FchEhciPhyControlReg3_3 )
+
+          Stall (1)                                          //? Not sure how long it is
+          Store ( FchEhciPhyControlReg3_3, Local2 )
+          And ( Local2, 0xFFFFFFFD, Local2 )
+          Or ( Local2, 0x00000002, FchEhciPhyControlReg3_3 )
+          Stall (2)                                          //? Not sure how long it is
+          Store ( FchEhciPhyControlReg3_3, Local2 )
+          And ( Local2, 0xFFFFFFFD, Local2 )
+          Or ( Local2, 0x00000000, FchEhciPhyControlReg3_3 )
+          Store ( FchEhciCommonPhyCal3, Local2 )
+          Or ( Local2, 0x00010000, FchEhciCommonPhyCal3 )
+          Store ( FchEhciMiscControl3, Local2 )
+          And ( Local2, 0x5BDD00BF, Local2 )
+          Or ( Local2, 0xA4221140, FchEhciMiscControl3 )
+          Store ( FchEhciSpare3, Local2 )
+          And ( Local2, 0x00000004, Local2 )
+          Or ( Local2, 0x00000027, FchEhciSpare3 )
+
+          if ( LEqual ( 1, FchUsbMsiEnable )) {
+            Store ( FchEhciMiscControl3, Local2 )
+            And ( Local2, 0xFFFFFFBF, FchEhciMiscControl3 )
+          }
+          Store ( FchEhciSpare3, Local2 )
+          And ( Local2, 0x848067EF, Local2 )
+          Or ( Local2, 0x7B7F9810, FchEhciSpare3 )
+          Store ( FchEhciMiscControl3, Local2 )
+          Or ( Local2, 0x00080000, FchEhciMiscControl3)
+
+          //
+          // ISO device CRC false error detection
+          //
+          Store ( 0, Local0 )
+          While ( LNotEqual ( 4, Local0))
+          {
+            ShiftLeft ( Local0, 13, Local3 )                 // Local3 Port#  
+            Store ( FchEhciUtmiControl3, Local2 )
+            And ( Local2, 0xFFFE0000, Local2 )
+            Or ( Local2, Local3, Local4 )
+            Or ( Local4, 0x00001380, FchEhciUtmiControl3 )
+            Store ( FchEhciPhyStatus3 , Local2 )
+            ShiftLeft ( Local0, 4, Local5 )
+            ShiftRight ( Local2, Local5, Local2 )
+            And ( Local2, 0xF8, Local2 )
+            Or (Local2, 0x05, Local2 )
+            Store ( FchEhciUtmiControl3, Local5 )
+            And ( Local5, 0xFFFE0000, Local5 )
+            Or ( Local2, Local3, Local4 )                    // Port#
+            Or ( Local4, 0x00001380, Local4 )
+            Or ( Local4, Local5, FchEhciUtmiControl3 )
+            Store ( FchEhciUtmiControl3, Local2 )
+            And (Local2, 0xFFFFEFFF, FchEhciUtmiControl3 )
+            Store ( FchEhciUtmiControl3, Local2 )
+            Or (Local2, 0x00001000, FchEhciUtmiControl3 )
+            Increment ( Local0 )
+          }
+        }
+      }
+    }
+
+    Method(_DSW,3)
+    {
+      If(Arg0)
+      {
+      }
+      Else
+      {
+      }
+    }
+    Method(_S0W,0)
+    {
+      Return(4)
+    }
+    Method(_PS0,0)
+    {
+      Store(0x70, IO80)
+      DeviceEnterD0 (DeviceControlEhci3)   
+      FchInitMidUsbEhci3 ()
+      FchS0I3ReadyCheck()
+    }
+    Method(_PS3,0)
+    {
+      Store(0x73, IO80)
+      DeviceEnterD3Hot (DeviceControlEhci3)
+    }
+  }
+

@@ -1,0 +1,8 @@
+
+#include "EfiDepex.h"
+#include EFI_PROTOCOL_DEFINITION (AcpiSupport)
+
+DEPENDENCY_START
+  EFI_ACPI_SUPPORT_GUID
+DEPENDENCY_END
+

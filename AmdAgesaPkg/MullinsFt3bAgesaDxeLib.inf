@@ -1,0 +1,719 @@
+#;*****************************************************************************
+#;
+#; Copyright 2008 - 2014 ADVANCED MICRO DEVICES, INC.  All Rights Reserved.
+#;
+#; AMD is granting you permission to use this software (the Materials)
+#; pursuant to the terms and conditions of your Software License Agreement
+#; with AMD.  This header does *NOT* give you permission to use the Materials
+#; or any rights under AMD's intellectual property.  Your use of any portion
+#; of these Materials shall constitute your acceptance of those terms and
+#; conditions.  If you do not agree to the terms and conditions of the Software
+#; License Agreement, please do not use any portion of these Materials.
+#;
+#; CONFIDENTIALITY:  The Materials and all other information, identified as
+#; confidential and provided to you by AMD shall be kept confidential in
+#; accordance with the terms and conditions of the Software License Agreement.
+#;
+#; LIMITATION OF LIABILITY: THE MATERIALS AND ANY OTHER RELATED INFORMATION
+#; PROVIDED TO YOU BY AMD ARE PROVIDED "AS IS" WITHOUT ANY EXPRESS OR IMPLIED
+#; WARRANTY OF ANY KIND, INCLUDING BUT NOT LIMITED TO WARRANTIES OF
+#; MERCHANTABILITY, NONINFRINGEMENT, TITLE, FITNESS FOR ANY PARTICULAR PURPOSE,
+#; OR WARRANTIES ARISING FROM CONDUCT, COURSE OF DEALING, OR USAGE OF TRADE.
+#; IN NO EVENT SHALL AMD OR ITS LICENSORS BE LIABLE FOR ANY DAMAGES WHATSOEVER
+#; (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF PROFITS, BUSINESS
+#; INTERRUPTION, OR LOSS OF INFORMATION) ARISING OUT OF AMD'S NEGLIGENCE,
+#; GROSS NEGLIGENCE, THE USE OF OR INABILITY TO USE THE MATERIALS OR ANY OTHER
+#; RELATED INFORMATION PROVIDED TO YOU BY AMD, EVEN IF AMD HAS BEEN ADVISED OF
+#; THE POSSIBILITY OF SUCH DAMAGES.  BECAUSE SOME JURISDICTIONS PROHIBIT THE
+#; EXCLUSION OR LIMITATION OF LIABILITY FOR CONSEQUENTIAL OR INCIDENTAL DAMAGES,
+#; THE ABOVE LIMITATION MAY NOT APPLY TO YOU.
+#;
+#; AMD does not assume any responsibility for any errors which may appear in
+#; the Materials or any other related information provided to you by AMD, or
+#; result from use of the Materials or any related information.
+#;
+#; You agree that you will not reverse engineer or decompile the Materials.
+#;
+#; NO SUPPORT OBLIGATION: AMD is not obligated to furnish, support, or make any
+#; further information, software, technical information, know-how, or show-how
+#; available to you.  Additionally, AMD retains the right to modify the
+#; Materials at any time, without notice, and is not obligated to provide such
+#; modified Materials to you.
+#;
+#; U.S. GOVERNMENT RESTRICTED RIGHTS: The Materials are provided with
+#; "RESTRICTED RIGHTS." Use, duplication, or disclosure by the Government is
+#; subject to the restrictions as set forth in FAR 52.227-14 and
+#; DFAR252.227-7013, et seq., or its successor.  Use of the Materials by the
+#; Government constitutes acknowledgement of AMD's proprietary rights in them.
+#;
+#; EXPORT ASSURANCE:  You agree and certify that neither the Materials, nor any
+#; direct product thereof will be exported directly or indirectly, into any
+#; country prohibited by the United States Export Administration Act and the
+#; regulations thereunder, without the required authorization from the U.S.
+#; government nor will be used for any purpose prohibited by the same.
+#;*****************************************************************************
+
+[Defines]
+  LIBRARY_CLASS = AgesaDxeLib | DXE_DRIVER DXE_SMM_DRIVER DXE_RUNTIME_DRIVER
+  BASE_NAME             = AgesaDxeLib
+  INF_VERSION           = 0x00010006
+  FILE_GUID             = 8A49D2DF-5E0F-4ede-8152-996A8E7E4A33
+  MODULE_TYPE           = BASE
+  VERSION_STRING        = 1.0
+
+[Sources]
+  Include\AdvancedApi.h
+  Include\CommonReturns.h
+  Include\Filecode.h
+  Include\GeneralServices.h
+  Include\GnbInterface.h
+  Include\GnbPage.h
+  Include\Ids.h
+  Include\IdsPerf.h
+  Include\MullinsFt3bInstall.h
+  Include\OptionApmInstall.h
+  Include\OptionC6Install.h
+  Include\OptionCdit.h
+  Include\OptionCditInstall.h
+  Include\OptionConnectedStandbyInstall.h
+  Include\OptionCpbInstall.h
+  Include\OptionCpuCacheFlushOnHaltInstall.h
+  Include\OptionCpuCoreLevelingInstall.h
+  Include\OptionCpuFamiliesInstall.h
+  Include\OptionCpuFeaturesInstall.h
+  Include\OptionCpuSpecificServicesInstall.h
+  Include\OptionCpuSpecificServicesInstallReset.h
+  Include\OptionCrat.h
+  Include\OptionCratInstall.h
+  Include\OptionDmi.h
+  Include\OptionDmiInstall.h
+  Include\OptionFamily16hEarlySample.h
+  Include\OptionFamily16hInstall.h
+  Include\OptionFchInstall.h
+  Include\OptionGfxRecovery.h
+  Include\OptionGfxRecoveryInstall.h
+  Include\OptionGnb.h
+  Include\OptionGnbInstall.h
+  Include\OptionHtcInstall.h
+  Include\OptionIdsInstall.h
+  Include\OptionIoCstateInstall.h
+  Include\OptionMemory.h
+  Include\OptionMemoryInstall.h
+  Include\OptionMemoryRecovery.h
+  Include\OptionMemoryRecoveryInstall.h
+  Include\OptionMmioMapInstall.h
+  Include\OptionMultiSocket.h
+  Include\OptionMultiSocketInstall.h
+  Include\OptionPsiInstall.h
+  Include\OptionPstate.h
+  Include\OptionPstateInstall.h
+  Include\Options.h
+  Include\OptionS3ScriptInstall.h
+  Include\OptionScsInstall.h
+  Include\OptionSlit.h
+  Include\OptionSlitInstall.h
+  Include\OptionsPage.h
+  Include\OptionSrat.h
+  Include\OptionSratInstall.h
+  Include\OptionsTopology.h
+  Include\OptionTopologyInstall.h
+  Include\OptionWhea.h
+  Include\OptionWheaInstall.h
+  Include\PlatformInstall.h
+  Include\PlatformMemoryConfiguration.h
+  Include\Topology.h
+  Lib\amdlib.c
+  Lib\amdlib.h
+  Proc\Common\AmdFch.h
+  Proc\Common\AmdInitEarly.c
+  Proc\Common\AmdInitEnv.c
+  Proc\Common\AmdInitLate.c
+  Proc\Common\AmdInitMid.c
+  Proc\Common\AmdInitPost.c
+  Proc\Common\AmdInitRecovery.c
+  Proc\Common\AmdInitReset.c
+  Proc\Common\AmdInitResume.c
+  Proc\Common\AmdLateRunApTask.c
+  Proc\Common\AmdS3LateRestore.c
+  Proc\Common\AmdS3Save.c
+  Proc\Common\CommonInits.c
+  Proc\Common\CommonInits.h
+  Proc\Common\CommonPage.h
+  Proc\Common\CommonReturns.c
+  Proc\Common\CreateStruct.c
+  Proc\Common\CreateStruct.h
+  Proc\Common\S3RestoreState.c
+  Proc\Common\S3SaveState.c
+  Proc\Common\S3SaveState.h
+  Proc\CPU\cpuApicUtilities.c
+  Proc\CPU\cpuApicUtilities.h
+  Proc\CPU\cpuBist.c
+  Proc\CPU\cpuEarlyInit.c
+  Proc\CPU\cpuEarlyInit.h
+  Proc\CPU\cpuEnvInit.h
+  Proc\CPU\cpuEventLog.c
+  Proc\CPU\cpuFamilyTranslation.c
+  Proc\CPU\cpuFamilyTranslation.h
+  Proc\CPU\cpuGeneralServices.c
+  Proc\CPU\cpuLateInit.c
+  Proc\CPU\cpuLateInit.h
+  Proc\CPU\cpuMicrocodePatch.c
+  Proc\CPU\cpuPage.h
+  Proc\CPU\cpuPostInit.c
+  Proc\CPU\cpuPostInit.h
+  Proc\CPU\cpuPowerMgmt.c
+  Proc\CPU\cpuPowerMgmtSingleSocket.c
+  Proc\CPU\cpuPowerMgmtSingleSocket.h
+  Proc\CPU\cpuPowerMgmtSystemTables.h
+  Proc\CPU\cpuRegisters.h
+  Proc\CPU\cpuServices.h
+  Proc\CPU\cpuWarmReset.c
+  Proc\CPU\heapManager.c
+  Proc\CPU\heapManager.h
+  Proc\CPU\mmioMapManager.c
+  Proc\CPU\mmioMapManager.h
+  Proc\CPU\S3.c
+  Proc\CPU\S3.h
+  Proc\CPU\Table.c
+  Proc\CPU\Table.h
+  Proc\CPU\Family\cpuFamRegisters.h
+  Proc\CPU\Family\0x16\cpuF16Apm.c
+  Proc\CPU\Family\0x16\cpuF16BrandId.c
+  Proc\CPU\Family\0x16\cpuF16CacheDefaults.c
+  Proc\CPU\Family\0x16\cpuF16Crat.c
+  Proc\CPU\Family\0x16\cpuF16Dmi.c
+  Proc\CPU\Family\0x16\cpuF16Dmi.h
+  Proc\CPU\Family\0x16\cpuF16MmioMap.c
+  Proc\CPU\Family\0x16\cpuF16MmioMap.h
+  Proc\CPU\Family\0x16\cpuF16MsrUnknownTables.c
+  Proc\CPU\Family\0x16\cpuF16PciUnknownTables.c
+  Proc\CPU\Family\0x16\cpuF16PowerMgmt.h
+  Proc\CPU\Family\0x16\cpuF16Utilities.c
+  Proc\CPU\Family\0x16\cpuF16Utilities.h
+  Proc\CPU\Family\0x16\cpuF16WheaInitDataTables.c
+  Proc\CPU\Family\0x16\ML\F16MlC6State.c
+  Proc\CPU\Family\0x16\ML\F16MlCacheFlushOnHalt.c
+  Proc\CPU\Family\0x16\ML\F16MlConnectedStandby.c
+  Proc\CPU\Family\0x16\ML\F16MlConnectedStandby.h
+  Proc\CPU\Family\0x16\ML\F16MlCoreAfterReset.c
+  Proc\CPU\Family\0x16\ML\F16MlCoreAfterReset.h
+  Proc\CPU\Family\0x16\ML\F16MlCpb.c
+  Proc\CPU\Family\0x16\ML\F16MlDmi.c
+  Proc\CPU\Family\0x16\ML\F16MlEquivalenceTable.c
+  Proc\CPU\Family\0x16\ML\F16MlHtc.c
+  Proc\CPU\Family\0x16\ML\F16MlId7300MicrocodePatch.c
+  Proc\CPU\Family\0x16\ML\F16MlId7301MicrocodePatch.c
+  Proc\CPU\Family\0x16\ML\F16MlInitEarlyTable.c
+  Proc\CPU\Family\0x16\ML\F16MlIoCstate.c
+  Proc\CPU\Family\0x16\ML\F16MlLogicalIdTables.c
+  Proc\CPU\Family\0x16\ML\F16MlMicrocodePatchTables.c
+  Proc\CPU\Family\0x16\ML\F16MlMsrTables.c
+  Proc\CPU\Family\0x16\ML\F16MlNbAfterReset.c
+  Proc\CPU\Family\0x16\ML\F16MlNbAfterReset.h
+  Proc\CPU\Family\0x16\ML\F16MlPciTables.c
+  Proc\CPU\Family\0x16\ML\F16MlPowerCheck.c
+  Proc\CPU\Family\0x16\ML\F16MlPowerCheck.h
+  Proc\CPU\Family\0x16\ML\F16MlPowerMgmt.h
+  Proc\CPU\Family\0x16\ML\F16MlPowerMgmtSystemTables.c
+  Proc\CPU\Family\0x16\ML\F16MlPsi.c
+  Proc\CPU\Family\0x16\ML\F16MlPstate.c
+  Proc\CPU\Family\0x16\ML\F16MlScs.c
+  Proc\CPU\Family\0x16\ML\F16MlScs.h
+  Proc\CPU\Family\0x16\ML\F16MlSharedMsrTable.c
+  Proc\CPU\Family\0x16\ML\F16MlUtilities.c
+  Proc\CPU\Family\0x16\ML\F16MlUtilities.h
+  Proc\CPU\Feature\cpuApm.c
+  Proc\CPU\Feature\cpuApm.h
+  Proc\CPU\Feature\cpuC6State.c
+  Proc\CPU\Feature\cpuC6State.h
+  Proc\CPU\Feature\cpuCacheFlushOnHalt.c
+  Proc\CPU\Feature\cpuCacheInit.c
+  Proc\CPU\Feature\cpuCacheInit.h
+  Proc\CPU\Feature\cpuCdit.c
+  Proc\CPU\Feature\cpuConnectedStandby.c
+  Proc\CPU\Feature\cpuConnectedStandby.h
+  Proc\CPU\Feature\cpuCoreLeveling.c
+  Proc\CPU\Feature\cpuCpb.c
+  Proc\CPU\Feature\cpuCpb.h
+  Proc\CPU\Feature\cpuCrat.c
+  Proc\CPU\Feature\cpuCrat.h
+  Proc\CPU\Feature\cpuDmi.c
+  Proc\CPU\Feature\cpuFeatures.c
+  Proc\CPU\Feature\cpuFeatures.h
+  Proc\CPU\Feature\cpuHtc.c
+  Proc\CPU\Feature\cpuHtc.h
+  Proc\CPU\Feature\cpuIoCstate.c
+  Proc\CPU\Feature\cpuIoCstate.h
+  Proc\CPU\Feature\cpuPsi.c
+  Proc\CPU\Feature\cpuPsi.h
+  Proc\CPU\Feature\cpuPstateGather.c
+  Proc\CPU\Feature\cpuPstateLeveling.c
+  Proc\CPU\Feature\cpuPstateTables.c
+  Proc\CPU\Feature\cpuPstateTables.h
+  Proc\CPU\Feature\cpuScs.c
+  Proc\CPU\Feature\cpuScs.h
+  Proc\CPU\Feature\cpuSlit.c
+  Proc\CPU\Feature\cpuSrat.c
+  Proc\CPU\Feature\cpuWhea.c
+  Proc\Fch\Fch.h
+  Proc\Fch\FchPage.h
+  Proc\Fch\FchPlatform.h
+  Proc\Fch\Avalon\AvalonFch.h
+  Proc\Fch\Avalon\EnvDefAvalon.c
+  Proc\Fch\Avalon\ResetDefAvalon.c
+  Proc\Fch\Avalon\AvalonAzalia\AvalonAzaliaEnv.c
+  Proc\Fch\Avalon\AvalonHwAcpi\AvalonHwAcpiEnv.c
+  Proc\Fch\Avalon\AvalonHwAcpi\AvalonHwAcpiEnvService.c
+  Proc\Fch\Avalon\AvalonHwm\AvalonHwmEnv.c
+  Proc\Fch\Avalon\AvalonHwm\AvalonHwmEnvService.c
+  Proc\Fch\Avalon\AvalonImc\AvalonFchEcEnv.c
+  Proc\Fch\Avalon\AvalonImc\AvalonImcEnv.c
+  Proc\Fch\Avalon\AvalonImc\AvalonImcLib.c
+  Proc\Fch\Avalon\AvalonImc\AvalonImcService.c
+  Proc\Fch\Avalon\AvalonInterface\AvalonFchInitEnv.c
+  Proc\Fch\Avalon\AvalonInterface\AvalonFchTaskLauncher.c
+  Proc\Fch\Avalon\AvalonInterface\AvalonFchTaskLauncher.h
+  Proc\Fch\Avalon\AvalonInterface\AvalonInitEnvDef.c
+  Proc\Fch\Avalon\AvalonInterface\AvalonInitResetDef.c
+  Proc\Fch\Avalon\AvalonPcie\AvalonAbEnv.c
+  Proc\Fch\Avalon\AvalonPcie\AvalonAbEnvService.c
+  Proc\Fch\Avalon\AvalonPcie\AvalonAbService.c
+  Proc\Fch\Avalon\AvalonSata\AvalonAhciEnv.c
+  Proc\Fch\Avalon\AvalonSata\AvalonAhciLib.c
+  Proc\Fch\Avalon\AvalonSata\AvalonIde2AhciEnv.c
+  Proc\Fch\Avalon\AvalonSata\AvalonIde2AhciLib.c
+  Proc\Fch\Avalon\AvalonSata\AvalonRaidEnv.c
+  Proc\Fch\Avalon\AvalonSata\AvalonRaidLib.c
+  Proc\Fch\Avalon\AvalonSata\AvalonSataEnv.c
+  Proc\Fch\Avalon\AvalonSata\AvalonSataEnvLib.c
+  Proc\Fch\Avalon\AvalonSata\AvalonSataEnvService.c
+  Proc\Fch\Avalon\AvalonSata\AvalonSataIdeEnv.c
+  Proc\Fch\Avalon\AvalonSata\AvalonSataIdeLib.c
+  Proc\Fch\Avalon\AvalonSata\AvalonSataLib.c
+  Proc\Fch\Avalon\AvalonSd\AvalonSdEnv.c
+  Proc\Fch\Avalon\AvalonSd\AvalonSdEnvService.c
+  Proc\Fch\Avalon\AvalonSpi\AvalonLpcEnv.c
+  Proc\Fch\Avalon\AvalonSpi\AvalonLpcEnvService.c
+  Proc\Fch\Avalon\AvalonSpi\AvalonSpiEnv.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonEhciEnv.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonEhciEnvService.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonUsbEnv.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonXhciEnv.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonXhciEnvService.c
+  Proc\Fch\Common\AcpiLib.c
+  Proc\Fch\Common\AcpiLib.h
+  Proc\Fch\Common\FchBiosRamUsage.h
+  Proc\Fch\Common\FchCommon.c
+  Proc\Fch\Common\FchCommonCfg.h
+  Proc\Fch\Common\FchCommonSmm.c
+  Proc\Fch\Common\FchDef.h
+  Proc\Fch\Common\FchLib.c
+  Proc\Fch\Common\FchPeLib.c
+  Proc\Fch\Common\MemLib.c
+  Proc\Fch\Common\PciLib.c
+  Proc\GNB\GnbInitAtEarly.c
+  Proc\GNB\GnbInitAtEnv.c
+  Proc\GNB\GnbInitAtLate.c
+  Proc\GNB\GnbInitAtMid.c
+  Proc\GNB\GnbInitAtPost.c
+  Proc\GNB\GnbInitAtReset.c
+  Proc\GNB\GnbInitAtS3Save.c
+  Proc\GNB\Common\Gnb.h
+  Proc\GNB\Common\GnbFamServices.h
+  Proc\GNB\Common\GnbFuseTable.h
+  Proc\GNB\Common\GnbGfx.h
+  Proc\GNB\Common\GnbGfxFamServices.h
+  Proc\GNB\Common\GnbIommu.h
+  Proc\GNB\Common\GnbLibFeatures.c
+  Proc\GNB\Common\GnbLibFeatures.h
+  Proc\GNB\Common\GnbPcie.h
+  Proc\GNB\Common\GnbPcieFamServices.h
+  Proc\GNB\Common\GnbRegistersCommon.h
+  Proc\GNB\Common\GnbRegistersCommonV2.h
+  Proc\GNB\Common\GnbRegistersML.h
+  Proc\GNB\Common\GnbUra.h
+  Proc\GNB\Common\GnbUraServices.h
+  Proc\GNB\Common\GnbUraToken.h
+  Proc\GNB\Modules\GnbCommonLib\GnbCommonLib.h
+  Proc\GNB\Modules\GnbCommonLib\GnbLib.c
+  Proc\GNB\Modules\GnbCommonLib\GnbLib.h
+  Proc\GNB\Modules\GnbCommonLib\GnbLibCpuAcc.c
+  Proc\GNB\Modules\GnbCommonLib\GnbLibCpuAcc.h
+  Proc\GNB\Modules\GnbCommonLib\GnbLibHeap.c
+  Proc\GNB\Modules\GnbCommonLib\GnbLibHeap.h
+  Proc\GNB\Modules\GnbCommonLib\GnbLibIoAcc.c
+  Proc\GNB\Modules\GnbCommonLib\GnbLibIoAcc.h
+  Proc\GNB\Modules\GnbCommonLib\GnbLibMemAcc.c
+  Proc\GNB\Modules\GnbCommonLib\GnbLibMemAcc.h
+  Proc\GNB\Modules\GnbCommonLib\GnbLibPci.c
+  Proc\GNB\Modules\GnbCommonLib\GnbLibPci.h
+  Proc\GNB\Modules\GnbCommonLib\GnbLibPciAcc.c
+  Proc\GNB\Modules\GnbCommonLib\GnbLibPciAcc.h
+  Proc\GNB\Modules\GnbCommonLib\GnbTimerLib.c
+  Proc\GNB\Modules\GnbCommonLib\GnbTimerLib.h
+  Proc\GNB\Modules\GnbFamTranslation\GnbPcieTranslation.c
+  Proc\GNB\Modules\GnbFamTranslation\GnbTranslation.c
+  Proc\GNB\Modules\GnbGfxConfig\GfxConfigEnv.c
+  Proc\GNB\Modules\GnbGfxConfig\GfxConfigLib.c
+  Proc\GNB\Modules\GnbGfxConfig\GfxConfigLib.h
+  Proc\GNB\Modules\GnbGfxConfig\GfxConfigMid.c
+  Proc\GNB\Modules\GnbGfxConfig\GfxConfigPost.c
+  Proc\GNB\Modules\GnbGfxConfig\GnbGfxConfig.h
+  Proc\GNB\Modules\GnbGfxInitLibV1\GfxCardInfo.c
+  Proc\GNB\Modules\GnbGfxInitLibV1\GfxCardInfo.h
+  Proc\GNB\Modules\GnbGfxInitLibV1\GfxEnumConnectors.c
+  Proc\GNB\Modules\GnbGfxInitLibV1\GfxEnumConnectors.h
+  Proc\GNB\Modules\GnbGfxInitLibV1\GfxPowerPlayTable.c
+  Proc\GNB\Modules\GnbGfxInitLibV1\GfxPowerPlayTable.h
+  Proc\GNB\Modules\GnbGfxInitLibV1\GnbGfxInitLibV1.c
+  Proc\GNB\Modules\GnbGfxInitLibV1\GnbGfxInitLibV1.h
+  Proc\GNB\Modules\GnbGfxIntTableV3\GfxIntegratedInfoTable.c
+  Proc\GNB\Modules\GnbGfxIntTableV3\GfxIntegratedInfoTable.h
+  Proc\GNB\Modules\GnbGfxIntTableV3\GfxLibV3.c
+  Proc\GNB\Modules\GnbGfxIntTableV3\GfxLibV3.h
+  Proc\GNB\Modules\GnbGfxIntTableV3\GfxPwrPlayTable.c
+  Proc\GNB\Modules\GnbGfxIntTableV3\GfxPwrPlayTable.h
+  Proc\GNB\Modules\GnbInitML\AlibML.c
+  Proc\GNB\Modules\GnbInitML\AlibSsdtML.h
+  Proc\GNB\Modules\GnbInitML\GfxEnvInitML.c
+  Proc\GNB\Modules\GnbInitML\GfxGmcInitML.c
+  Proc\GNB\Modules\GnbInitML\GfxGmcInitML.h
+  Proc\GNB\Modules\GnbInitML\GfxIntegratedInfoTableML.c
+  Proc\GNB\Modules\GnbInitML\GfxLibML.c
+  Proc\GNB\Modules\GnbInitML\GfxLibML.h
+  Proc\GNB\Modules\GnbInitML\GfxMidInitML.c
+  Proc\GNB\Modules\GnbInitML\GfxPostInitML.c
+  Proc\GNB\Modules\GnbInitML\GfxSamuInitML.c
+  Proc\GNB\Modules\GnbInitML\GfxSamuInitML.h
+  Proc\GNB\Modules\GnbInitML\GfxTablesML.c
+  Proc\GNB\Modules\GnbInitML\GnbEarlyInitML.c
+  Proc\GNB\Modules\GnbInitML\GnbEnvInitML.c
+  Proc\GNB\Modules\GnbInitML\GnbFuseTableML.c
+  Proc\GNB\Modules\GnbInitML\GnbFuseTableML.h
+  Proc\GNB\Modules\GnbInitML\GnbInitMLInstall.h
+  Proc\GNB\Modules\GnbInitML\GnbIommuIvrsML.c
+  Proc\GNB\Modules\GnbInitML\GnbIommuTablesML.c
+  Proc\GNB\Modules\GnbInitML\GnbMidInitML.c
+  Proc\GNB\Modules\GnbInitML\GnbPostInitML.c
+  Proc\GNB\Modules\GnbInitML\GnbPspML.c
+  Proc\GNB\Modules\GnbInitML\GnbPspML.h
+  Proc\GNB\Modules\GnbInitML\GnbRegisterAccML.c
+  Proc\GNB\Modules\GnbInitML\GnbRegisterAccML.h
+  Proc\GNB\Modules\GnbInitML\GnbSamuPatchML.h
+  Proc\GNB\Modules\GnbInitML\GnbSmuBiosTableML.c
+  Proc\GNB\Modules\GnbInitML\GnbSmuBiosTableML.h
+  Proc\GNB\Modules\GnbInitML\GnbSmuScsML.h
+  Proc\GNB\Modules\GnbInitML\GnbTablesML.c
+  Proc\GNB\Modules\GnbInitML\GnbUraML.c
+  Proc\GNB\Modules\GnbInitML\GnbUraTokenMapML.c
+  Proc\GNB\Modules\GnbInitML\PcieComplexDataML.c
+  Proc\GNB\Modules\GnbInitML\PcieComplexDataML.h
+  Proc\GNB\Modules\GnbInitML\PcieConfigML.c
+  Proc\GNB\Modules\GnbInitML\PcieEarlyInitML.c
+  Proc\GNB\Modules\GnbInitML\PcieEnvInitML.c
+  Proc\GNB\Modules\GnbInitML\PcieLibML.c
+  Proc\GNB\Modules\GnbInitML\PcieLibML.h
+  Proc\GNB\Modules\GnbInitML\PcieMidInitML.c
+  Proc\GNB\Modules\GnbInitML\PciePostInitML.c
+  Proc\GNB\Modules\GnbInitML\PcieTablesML.c
+  Proc\GNB\Modules\GnbIoapic\GnbIoapic.c
+  Proc\GNB\Modules\GnbIommuIvrs\GnbIommuIvrs.c
+  Proc\GNB\Modules\GnbIommuIvrs\GnbIommuIvrs.h
+  Proc\GNB\Modules\GnbIommuScratch\GnbIommuScratch.c
+  Proc\GNB\Modules\GnbIvrsLib\GnbIvrsLib.c
+  Proc\GNB\Modules\GnbIvrsLib\GnbIvrsLib.h
+  Proc\GNB\Modules\GnbNbInitLibV1\GnbNbInitLibV1.c
+  Proc\GNB\Modules\GnbNbInitLibV1\GnbNbInitLibV1.h
+  Proc\GNB\Modules\GnbNbInitLibV4\GnbNbInitLibV4.c
+  Proc\GNB\Modules\GnbNbInitLibV4\GnbNbInitLibV4.h
+  Proc\GNB\Modules\GnbNbInitLibV5\GnbNbInitLibV5.c
+  Proc\GNB\Modules\GnbNbInitLibV5\GnbNbInitLibV5.h
+  Proc\GNB\Modules\GnbPcieAlibV2\PcieAlibV2.c
+  Proc\GNB\Modules\GnbPcieAlibV2\PcieAlibV2.h
+  Proc\GNB\Modules\GnbPcieAspm\PcieAspm.c
+  Proc\GNB\Modules\GnbPcieAspm\PcieAspm.h
+  Proc\GNB\Modules\GnbPcieClkPm\PcieClkPm.c
+  Proc\GNB\Modules\GnbPcieClkPm\PcieClkPm.h
+  Proc\GNB\Modules\GnbPcieCommClkCfg\PcieCommClkCfg.c
+  Proc\GNB\Modules\GnbPcieCommClkCfg\PcieCommClkCfg.h
+  Proc\GNB\Modules\GnbPcieConfig\GnbHandleLib.c
+  Proc\GNB\Modules\GnbPcieConfig\GnbHandleLib.h
+  Proc\GNB\Modules\GnbPcieConfig\GnbPcieConfig.h
+  Proc\GNB\Modules\GnbPcieConfig\PcieConfigData.c
+  Proc\GNB\Modules\GnbPcieConfig\PcieConfigData.h
+  Proc\GNB\Modules\GnbPcieConfig\PcieConfigLib.c
+  Proc\GNB\Modules\GnbPcieConfig\PcieConfigLib.h
+  Proc\GNB\Modules\GnbPcieConfig\PcieInputParser.c
+  Proc\GNB\Modules\GnbPcieConfig\PcieInputParser.h
+  Proc\GNB\Modules\GnbPcieConfig\PcieMapTopology.c
+  Proc\GNB\Modules\GnbPcieConfig\PcieMapTopology.h
+  Proc\GNB\Modules\GnbPcieInitLibV1\GnbPcieInitLibV1.h
+  Proc\GNB\Modules\GnbPcieInitLibV1\PcieAspmBlackList.c
+  Proc\GNB\Modules\GnbPcieInitLibV1\PcieAspmBlackList.h
+  Proc\GNB\Modules\GnbPcieInitLibV1\PcieAspmExitLatency.c
+  Proc\GNB\Modules\GnbPcieInitLibV1\PcieAspmExitLatency.h
+  Proc\GNB\Modules\GnbPcieInitLibV1\PciePhyServices.c
+  Proc\GNB\Modules\GnbPcieInitLibV1\PciePhyServices.h
+  Proc\GNB\Modules\GnbPcieInitLibV1\PciePifServices.c
+  Proc\GNB\Modules\GnbPcieInitLibV1\PciePifServices.h
+  Proc\GNB\Modules\GnbPcieInitLibV1\PciePortRegAcc.c
+  Proc\GNB\Modules\GnbPcieInitLibV1\PciePortRegAcc.h
+  Proc\GNB\Modules\GnbPcieInitLibV1\PciePortServices.c
+  Proc\GNB\Modules\GnbPcieInitLibV1\PciePortServices.h
+  Proc\GNB\Modules\GnbPcieInitLibV1\PciePowerMgmt.c
+  Proc\GNB\Modules\GnbPcieInitLibV1\PciePowerMgmt.h
+  Proc\GNB\Modules\GnbPcieInitLibV1\PcieSiliconServices.c
+  Proc\GNB\Modules\GnbPcieInitLibV1\PcieSiliconServices.h
+  Proc\GNB\Modules\GnbPcieInitLibV1\PcieTimer.c
+  Proc\GNB\Modules\GnbPcieInitLibV1\PcieTimer.h
+  Proc\GNB\Modules\GnbPcieInitLibV1\PcieTopologyServices.c
+  Proc\GNB\Modules\GnbPcieInitLibV1\PcieTopologyServices.h
+  Proc\GNB\Modules\GnbPcieInitLibV1\PcieUtilityLib.c
+  Proc\GNB\Modules\GnbPcieInitLibV1\PcieUtilityLib.h
+  Proc\GNB\Modules\GnbPcieInitLibV1\PcieWrapperRegAcc.c
+  Proc\GNB\Modules\GnbPcieInitLibV1\PcieWrapperRegAcc.h
+  Proc\GNB\Modules\GnbPcieInitLibV4\GnbPcieInitLibV4.h
+  Proc\GNB\Modules\GnbPcieInitLibV4\PciePortServicesV4.c
+  Proc\GNB\Modules\GnbPcieInitLibV4\PciePortServicesV4.h
+  Proc\GNB\Modules\GnbPcieInitLibV4\PciePowerMgmtV4.c
+  Proc\GNB\Modules\GnbPcieInitLibV4\PciePowerMgmtV4.h
+  Proc\GNB\Modules\GnbPcieInitLibV4\PcieWrapperServicesV4.c
+  Proc\GNB\Modules\GnbPcieInitLibV4\PcieWrapperServicesV4.h
+  Proc\GNB\Modules\GnbPcieInitLibV5\GnbPcieInitLibV5.h
+  Proc\GNB\Modules\GnbPcieInitLibV5\PcieAspmExitLatencyV5.c
+  Proc\GNB\Modules\GnbPcieInitLibV5\PciePifServicesV5.c
+  Proc\GNB\Modules\GnbPcieInitLibV5\PciePortServicesV5.c
+  Proc\GNB\Modules\GnbPcieInitLibV5\PciePowerMgmtV5.c
+  Proc\GNB\Modules\GnbPcieInitLibV5\PcieSiliconServicesV5.c
+  Proc\GNB\Modules\GnbPcieInitLibV5\PcieTopologyServicesV5.c
+  Proc\GNB\Modules\GnbPcieInitLibV5\PcieWrapperServicesV5.c
+  Proc\GNB\Modules\GnbPcieMaxPayload\PcieMaxPayload.c
+  Proc\GNB\Modules\GnbPcieMaxPayload\PcieMaxPayload.h
+  Proc\GNB\Modules\GnbPcieTrainingV2\GnbPcieTrainingV2.h
+  Proc\GNB\Modules\GnbPcieTrainingV2\PcieTrainingV2.c
+  Proc\GNB\Modules\GnbPcieTrainingV2\PcieTrainingV2.h
+  Proc\GNB\Modules\GnbPcieTrainingV2\PcieWorkaroundsV2.c
+  Proc\GNB\Modules\GnbPcieTrainingV2\PcieWorkaroundsV2.h
+  Proc\GNB\Modules\GnbSbIommuLib\GnbSbIommuLib.c
+  Proc\GNB\Modules\GnbSbIommuLib\GnbSbIommuLib.h
+  Proc\GNB\Modules\GnbSbLib\GnbSbLib.c
+  Proc\GNB\Modules\GnbSbLib\GnbSbLib.h
+  Proc\GNB\Modules\GnbSbLib\GnbSbPcie.c
+  Proc\GNB\Modules\GnbScsLibV1\GnbScsLibV1.c
+  Proc\GNB\Modules\GnbSmuLibV7\GnbSmuInitLibV7.c
+  Proc\GNB\Modules\GnbSmuLibV7\GnbSmuInitLibV7.h
+  Proc\GNB\Modules\GnbSSocketLib\GnbSSocketLib.c
+  Proc\GNB\Modules\GnbSview\GnbSview.c
+  Proc\GNB\Modules\GnbTable\GnbTable.c
+  Proc\GNB\Modules\GnbTable\GnbTable.h
+  Proc\GNB\Modules\GnbUraLibV1\GnbUraLibV1.c
+  Proc\IDS\IdsLib.h
+  Proc\IDS\IdsPage.h
+  Proc\IDS\OptionsIds.h
+  Proc\IDS\Control\IdsCtrl.c
+  Proc\IDS\Control\IdsNvToCmos.c
+  Proc\IDS\Control\IdsNvToCmos.h
+  Proc\IDS\Debug\IdsDebug.c
+  Proc\IDS\Debug\IdsDebugPrint.c
+  Proc\IDS\Debug\IdsDebugPrint.h
+  Proc\IDS\Debug\IdsDpHdtout.c
+  Proc\IDS\Debug\IdsDpHdtout.h
+  Proc\IDS\Debug\IdsDpRam.c
+  Proc\IDS\Debug\IdsDpRam.h
+  Proc\IDS\Debug\IdsDpRedirectIo.c
+  Proc\IDS\Debug\IdsDpSerial.c
+  Proc\IDS\Debug\IdsIdtTable.c
+  Proc\IDS\Family\0x16\ML\IdsF16MlAllService.c
+  Proc\IDS\Family\0x16\ML\IdsF16MlAllService.h
+  Proc\IDS\Family\0x16\ML\IdsF16MlNvDef.h
+  Proc\IDS\Library\IdsLib.c
+  Proc\IDS\Library\IdsRegAcc.c
+  Proc\IDS\Library\IdsRegAcc.h
+  Proc\IDS\Perf\IdsPerf.c
+  Proc\Mem\Feat\CRAT\mfCrat.c
+  Proc\Mem\Feat\CRAT\mfCrat.h
+  Proc\Mem\Feat\CSINTLV\mfcsi.c
+  Proc\Mem\Feat\CSINTLV\mfcsi.h
+  Proc\Mem\Feat\DATAEYE\mf2DDataEye.c
+  Proc\Mem\Feat\DLLPDBYPASS\mfDllPDBypass.c
+  Proc\Mem\Feat\DLLPDBYPASS\mfDllPDBypass.h
+  Proc\Mem\Feat\DMI\mfDMI.c
+  Proc\Mem\Feat\ECC\mfecc.c
+  Proc\Mem\Feat\ECC\mfecc.h
+  Proc\Mem\Feat\ECC\mfemp.c
+  Proc\Mem\Feat\EXCLUDIMM\mfdimmexclud.c
+  Proc\Mem\Feat\IDENDIMM\mfidendimm.c
+  Proc\Mem\Feat\IDENDIMM\mfidendimm.h
+  Proc\Mem\Feat\LVDDR3\mflvddr3.c
+  Proc\Mem\Feat\LVDDR3\mflvddr3.h
+  Proc\Mem\Feat\MEMCLR\mfmemclr.c
+  Proc\Mem\Feat\ODTHERMAL\mfodthermal.c
+  Proc\Mem\Feat\ODTHERMAL\mfodthermal.h
+  Proc\Mem\Feat\PARTRN\mfParallelTraining.c
+  Proc\Mem\Feat\PARTRN\mfStandardTraining.c
+  Proc\Mem\Feat\RDWR2DTRAINING\mfRdDqs2DTraining.c
+  Proc\Mem\Feat\RDWR2DTRAINING\mfRdWr2DEyeRimSearch.c
+  Proc\Mem\Feat\RDWR2DTRAINING\mfRdWr2DPatternGeneration.c
+  Proc\Mem\Feat\RDWR2DTRAINING\mfRdWr2DTraining.c
+  Proc\Mem\Feat\RDWR2DTRAINING\mfRdWr2DTraining.h
+  Proc\Mem\Feat\RDWR2DTRAINING\mfWrDat2DTraining.c
+  Proc\Mem\Feat\RDWR2DTRAINING\ML\mfRdWr2Dml.c
+  Proc\Mem\Feat\S3\mfs3.c
+  Proc\Mem\Feat\TABLE\mftds.c
+  Proc\Mem\Main\mdef.c
+  Proc\Mem\Main\merrhdl.c
+  Proc\Mem\Main\minit.c
+  Proc\Mem\Main\mm.c
+  Proc\Mem\Main\mmAggressor.c
+  Proc\Mem\Main\mmConditionalPso.c
+  Proc\Mem\Main\mmEcc.c
+  Proc\Mem\Main\mmExcludeDimm.c
+  Proc\Mem\Main\mmflow.c
+  Proc\Mem\Main\mmLvDdr3.c
+  Proc\Mem\Main\mmlvddr3.h
+  Proc\Mem\Main\mmMemClr.c
+  Proc\Mem\Main\mmMemRestore.c
+  Proc\Mem\Main\mmNodeInterleave.c
+  Proc\Mem\Main\mmOnlineSpare.c
+  Proc\Mem\Main\mmParallelTraining.c
+  Proc\Mem\Main\mmStandardTraining.c
+  Proc\Mem\Main\mmUmaAlloc.c
+  Proc\Mem\Main\muc.c
+  Proc\Mem\Main\ML\mmflowml.c
+  Proc\Mem\NB\mn.c
+  Proc\Mem\NB\mndct.c
+  Proc\Mem\NB\mnfeat.c
+  Proc\Mem\NB\mnflow.c
+  Proc\Mem\NB\mnmct.c
+  Proc\Mem\NB\mnphy.c
+  Proc\Mem\NB\mnpmu.c
+  Proc\Mem\NB\mnreg.c
+  Proc\Mem\NB\mnS3.c
+  Proc\Mem\NB\mntrain3.c
+  Proc\Mem\NB\ML\mndctml.c
+  Proc\Mem\NB\ML\mnflowml.c
+  Proc\Mem\NB\ML\mnidendimmml.c
+  Proc\Mem\NB\ML\mnmctml.c
+  Proc\Mem\NB\ML\mnml.c
+  Proc\Mem\NB\ML\mnml.h
+  Proc\Mem\NB\ML\mnotml.c
+  Proc\Mem\NB\ML\mnphyml.c
+  Proc\Mem\NB\ML\mnprotoml.c
+  Proc\Mem\NB\ML\mnpspml.c
+  Proc\Mem\NB\ML\mnregml.c
+  Proc\Mem\NB\ML\mns3ml.c
+  Proc\Mem\NB\ML\mnS3ml.h
+  Proc\Topology\TopoFeat.h
+  Proc\Topology\TopoMain.c
+  Proc\Topology\TopoNb.c
+  Proc\Topology\TopoNb.h
+  Proc\Topology\TopoNbCommonHardware.h
+  Proc\Topology\TopoPage.h
+  Proc\Topology\Fam16\TopoNbFam16.c
+  Proc\Topology\Fam16\TopoNbUtilitiesFam16.c
+  Proc\Topology\Fam16\TopoNbUtilitiesFam16.h
+
+[Sources.IA32]
+  Lib\IA32\amdlib32.asm
+  Lib\IA32\ms_shift.asm
+  Lib\IA32\msmemcpy.asm
+  Proc\CPU\cahalt.asm
+  Proc\Fch\Avalon\AvalonAzalia\AvalonAzaliaReset.c
+  Proc\Fch\Avalon\AvalonHwAcpi\AvalonHwAcpiReset.c
+  Proc\Fch\Avalon\AvalonHwAcpi\AvalonSSService.c
+  Proc\Fch\Avalon\AvalonHwm\AvalonHwmReset.c
+  Proc\Fch\Avalon\AvalonImc\AvalonFchEcReset.c
+  Proc\Fch\Avalon\AvalonImc\AvalonImcReset.c
+  Proc\Fch\Avalon\AvalonInterface\AvalonFchInitReset.c
+  Proc\Fch\Avalon\AvalonPcie\AvalonAbReset.c
+  Proc\Fch\Avalon\AvalonPcie\AvalonAbResetService.c
+  Proc\Fch\Avalon\AvalonSata\AvalonSataReset.c
+  Proc\Fch\Avalon\AvalonSata\AvalonSataResetService.c
+  Proc\Fch\Avalon\AvalonSd\AvalonSdResetService.c
+  Proc\Fch\Avalon\AvalonSpi\AvalonLpcReset.c
+  Proc\Fch\Avalon\AvalonSpi\AvalonLpcResetService.c
+  Proc\Fch\Avalon\AvalonSpi\AvalonSpiReset.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonEhciReset.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonUsbReset.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonXhciRecovery.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonXhciReset.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonXhciResetService.c
+  Proc\IDS\Control\IdsLib32.asm
+  Proc\Mem\Main\mu.asm
+
+[Sources.X64]
+  Lib\x64\amdlib64.asm
+  Proc\CPU\cahalt64.asm
+  Proc\Fch\Avalon\AvalonAzalia\AvalonAzaliaLate.c
+  Proc\Fch\Avalon\AvalonAzalia\AvalonAzaliaMid.c
+  Proc\Fch\Avalon\AvalonHwAcpi\AvalonHwAcpiLate.c
+  Proc\Fch\Avalon\AvalonHwAcpi\AvalonHwAcpiLateService.c
+  Proc\Fch\Avalon\AvalonHwAcpi\AvalonHwAcpiMid.c
+  Proc\Fch\Avalon\AvalonHwAcpi\AvalonHwAcpiMidService.c
+  Proc\Fch\Avalon\AvalonHwm\AvalonHwmLate.c
+  Proc\Fch\Avalon\AvalonHwm\AvalonHwmLateService.c
+  Proc\Fch\Avalon\AvalonHwm\AvalonHwmMid.c
+  Proc\Fch\Avalon\AvalonHwm\AvalonHwmMidService.c
+  Proc\Fch\Avalon\AvalonImc\AvalonFchEcLate.c
+  Proc\Fch\Avalon\AvalonImc\AvalonFchEcMid.c
+  Proc\Fch\Avalon\AvalonImc\AvalonImcLate.c
+  Proc\Fch\Avalon\AvalonImc\AvalonImcMid.c
+  Proc\Fch\Avalon\AvalonInterface\AvalonFchInitLate.c
+  Proc\Fch\Avalon\AvalonInterface\AvalonFchInitMid.c
+  Proc\Fch\Avalon\AvalonInterface\AvalonFchInitS3.c
+  Proc\Fch\Avalon\AvalonIr\AvalonIrEnv.c
+  Proc\Fch\Avalon\AvalonIr\AvalonIrLate.c
+  Proc\Fch\Avalon\AvalonIr\AvalonIrMid.c
+  Proc\Fch\Avalon\AvalonPcie\AvalonAbLate.c
+  Proc\Fch\Avalon\AvalonPcie\AvalonAbMid.c
+  Proc\Fch\Avalon\AvalonSata\AvalonAhciLate.c
+  Proc\Fch\Avalon\AvalonSata\AvalonAhciMid.c
+  Proc\Fch\Avalon\AvalonSata\AvalonIde2AhciLate.c
+  Proc\Fch\Avalon\AvalonSata\AvalonIde2AhciMid.c
+  Proc\Fch\Avalon\AvalonSata\AvalonRaidLate.c
+  Proc\Fch\Avalon\AvalonSata\AvalonRaidMid.c
+  Proc\Fch\Avalon\AvalonSata\AvalonSataIdeLate.c
+  Proc\Fch\Avalon\AvalonSata\AvalonSataIdeMid.c
+  Proc\Fch\Avalon\AvalonSata\AvalonSataLate.c
+  Proc\Fch\Avalon\AvalonSata\AvalonSataMid.c
+  Proc\Fch\Avalon\AvalonSata\AvalonSataService.c
+  Proc\Fch\Avalon\AvalonSd\AvalonSdLate.c
+  Proc\Fch\Avalon\AvalonSd\AvalonSdMid.c
+  Proc\Fch\Avalon\AvalonSd\AvalonSdService.c
+  Proc\Fch\Avalon\AvalonSpi\AvalonLpcLate.c
+  Proc\Fch\Avalon\AvalonSpi\AvalonLpcMid.c
+  Proc\Fch\Avalon\AvalonSpi\AvalonSpiLate.c
+  Proc\Fch\Avalon\AvalonSpi\AvalonSpiMid.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonEhciLate.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonEhciLateService.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonEhciMid.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonEhciMidService.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonUsbLate.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonUsbMid.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonXhciLate.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonXhciLateService.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonXhciMid.c
+  Proc\Fch\Avalon\AvalonUsb\AvalonXhciMidService.c
+  Proc\IDS\Control\IdsLib64.asm
+  Proc\Mem\Main\mu64.asm
+
+[Packages]
+  MdePkg/MdePkg.dec
+  AmdAgesaPkg/AmdAgesaPkg.dec
+
+[LibraryClasses]
+  AgesaUefiLib
+
+[LibraryClasses.common.PEIM]
+
+[Guids]
+
+[Protocols]
+
+[Ppis]
+
+[Pcd]
+
+[BuildOptions]
+  MSFT:*_*_*_CC_FLAGS = /W4 /GL-
+

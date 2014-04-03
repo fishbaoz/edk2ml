@@ -1,0 +1,21 @@
+//----------------------------------------------------------------------------
+// PSP FW Delivery Release Note
+// 
+// Copyright 2014, Advanced Micro Devices, Inc.
+// Image Version number: PSP BootLoader: 00.01.01.15, PSP SecureOS: 00.01.01.15
+// Date:   2/28/2014
+//----------------------------------------------------------------------------
+
+Files:
+	PspBootLoader.HVB.sbin - PSP offchip BootLoader, Hardware Validated Boot
+        PspBootLoader.Bypass.sbin - PSP bootloader with HVB bypass enabled
+	PspSecureOs.sbin       - PSP secure OS, signed with production key version
+	PspNvram.bin           - NV storage pattern used to populate the SPI-ROM.
+	PspTrustlets.bin       - PSP Trustlet binaries
+	
+Features and fixes:
+
+- Change tbase root key derivation scheme in order to revoke old TAs
+
+Note: this FW build is based on PSP FW 0.1.1.12
+

@@ -1,0 +1,297 @@
+#define ReadXhciIndReg                       XM00
+#define WriteXhciIndReg                      XM01
+#define RwXhciIndReg                         XM02
+#define ReadXhciPhy                          XM03
+#define FchXhciUsbPhyPortChkVBusy            XM04
+
+#define FchXhciUsbPhyCalibrated              XM10
+#define FchXhciInitIndirectReg               XM20
+#define FchXhciUsbPhyPortProgram01           XM11
+#define FchXhciUsbPhyPortProgram02           XM12
+
+
+
+#define BIT12                                0x00001000
+#define BIT17                                0x00020000
+
+#define FCH_XHCI_IND_REG00                   0x00
+#define FCH_XHCI_IND_REG94                   0x94
+#define FCH_XHCI_IND_REGD4                   0xD4
+
+#define FCH_XHCI_IND60_REG00                 0x40000000
+#define FCH_XHCI_IND60_REG04                 0x40000004
+#define FCH_XHCI_IND60_REG08                 0x40000008
+#define FCH_XHCI_IND60_REG0C                 0x4000000C
+#define FCH_XHCI_IND60_REG48                 0x40000048
+#define FCH_XHCI_IND60_REG50                 0x40000050
+#define FCH_XHCI_IND60_REG54                 0x40000054
+
+//XHC0
+  Scope(\_SB.PCI0) {
+    PowerResource(P0X0, 0, 0) {
+      Method(_STA) {
+        Return(1)
+      }
+
+      Method(_ON) {
+        Store(0x81, IO80)
+      }
+
+      Method(_OFF) {
+        Store(0x82, IO80)
+        DeviceEnterD3Cold (DeviceControlXhci)
+        FchS0I3ReadyCheck()
+      }
+    }
+    PowerResource(P3X0, 0, 0) {
+      Method(_STA) {
+        Return(1)
+      }
+
+      Method(_ON) {
+        Store(0x84, IO80)
+      }
+
+      Method(_OFF) {
+        Store(0x85, IO80)
+      }
+    }
+  }
+
+  Scope(\_SB.PCI0.XHC0)
+  {
+    OperationRegion(ACMM, SystemMemory, 0xFED81C00, 0x100)
+    Field(ACMM, DWordAcc, NoLock, Preserve) {
+              MM00, 32,                                    //XHCI_ACPI_MMIO_AMD_REG00
+      offset (0x8C),
+              MM8C, 32                                     //XHCI_ACPI_MMIO_AMD_REG8C
+    }
+    //OperationRegion(PCI_, PCI_Config, 0x00, 0x100)
+    OperationRegion(PCI_, SystemMemory, 0xF8080000, 0x100)
+    Field(PCI_, DWordAcc, NoLock, Preserve) {
+      offset (0x48),
+	          PC48, 32,                                    //FCH_XHCI_REG48
+	          PC4C, 32                                     //FCH_XHCI_REG4C
+	  }
+	  
+    Mutex(XHCM, 0)
+
+    Method(ReadXhciIndReg, 1)
+	{
+      Acquire(XHCM,0xFFFF)
+      Store(Arg0, PC48)
+      Store(PC4C, Local0)
+      Store(0, PC48)
+      Release(XHCM)
+      Return(Local0)
+	}
+
+    Method(WriteXhciIndReg, 2)
+	{
+      Acquire(XHCM,0xFFFF)
+      Store(Arg0, PC48)
+      Store(Arg1, PC4C)
+      Store(0, PC48)
+      Release(XHCM)
+	}
+	
+    Method(RwXhciIndReg, 3)
+	{
+      Acquire(XHCM,0xFFFF)
+      Store(Arg0, PC48)
+      Store(PC4C, Local0)
+      And(Local0, Arg1, Local0)
+      Or(Local0,Arg2,Local0)
+      Store(Local0, PC4C)
+      Store(0, PC48)
+      Release(XHCM)
+	}
+
+    Method(ReadXhciPhy, 2)
+	{
+      //Arg0: Port
+      //Arg1: Address
+      ShiftLeft(Arg0, 13, Local0)                        //Port << 13      
+      Or(Local0, BIT12, Local0)
+      Or(Local0, Arg1, Local0)
+      RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local0)
+      
+      Store(ReadXhciIndReg(FCH_XHCI_IND60_REG04), Local2)
+
+      ShiftLeft(Arg0, 3, Local0)
+      ShiftRight(Local2, Local0, Local2)
+      And(Local2, 0xFF, Local2)
+      Return(Local2)
+	}
+	
+    Method(FchXhciUsbPhyPortChkVBusy, 1)
+    {
+      Store(BIT17, Local0)
+      Store(Arg0, Local1)
+      While(LAnd(Local0, Local1))
+      {
+        Store(ReadXhciIndReg(FCH_XHCI_IND60_REG00), Local0)
+        And(Local0, BIT17, Local0)
+        Decrement(Local1)
+        Stall(10)
+      }
+    }
+    
+	Method(FchXhciUsbPhyPortProgram01, 2)
+    {
+      //Arg0: Port
+      //Arg1: DrivingStrength
+      ShiftLeft(Arg0, 13, Local0)                          //Port << 13      
+      Or(Local0, BIT12, Local0)
+      Or(Local0, Arg1, Local0)
+      RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local0)      
+      FchXhciUsbPhyPortChkVBusy(10)
+      
+      And(Local0, 0xFFFFEFFF, Local0)                      //And ~BIT12
+      RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local0)      
+      FchXhciUsbPhyPortChkVBusy(10)
+    }
+
+	Method(FchXhciUsbPhyPortProgram02, 2)
+    {
+      //Arg0: Port
+      //Arg1: DrivingStrength
+      ShiftLeft(Arg0, 13, Local0)                          //Port << 13      
+      Or(Local0, BIT12, Local0)
+      Or(Local0, Arg1, Local0)
+      RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local0)      
+      FchXhciUsbPhyPortChkVBusy(10)
+      
+      And(Local0, 0xFFFFEFFF, Local0)                      //And ~BIT12
+      RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local0)      
+      FchXhciUsbPhyPortChkVBusy(10)
+
+      Or(Local0, BIT12, Local0)
+      RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local0)
+    }
+    
+    Method(FchXhciUsbPhyCalibrated, 0)
+    {
+      Store(MM8C, Local0)
+      And(Local0, 0x3EF0FFFF, Local0)
+      Or(Local0, 0x81030000, Local0)
+      Store(Local0, MM8C)
+      
+      Store(0, Local0)
+      While(LLess(Local0, 2))
+      {
+        FchXhciUsbPhyPortProgram02(Local0, 0x302)
+        Increment(Local0)
+      }
+      
+      RwXhciIndReg(FCH_XHCI_IND60_REG50, 0xFFFFFFF0, 0x06)
+      RwXhciIndReg(FCH_XHCI_IND60_REG0C, 0x00FF0000, 0x90001221)
+      RwXhciIndReg(FCH_XHCI_IND60_REG54, 0xFFFFFF3D, 0x00000040)
+      Stall(100)
+      RwXhciIndReg(FCH_XHCI_IND60_REG54, 0xFFFFFFFD, 0x00000002)
+      Sleep(1)
+      RwXhciIndReg(FCH_XHCI_IND60_REG54, 0xFFFFFFFD, 0x00000000)      
+    }
+    
+    Method(FchXhciInitIndirectReg, 0)
+    {
+    //breakpoint
+      FchXhciUsbPhyCalibrated()
+
+      RwXhciIndReg(FCH_XHCI_IND_REG94, 0xFFFFFC00, 0x00000021)
+      RwXhciIndReg(FCH_XHCI_IND_REGD4, 0xFFFFFC00, 0x00000021)
+      RwXhciIndReg(FCH_XHCI_IND_REG00, 0xF8FFFFFF, 0x07000000)
+      
+      Store(0x00, Local0)                                  //Port
+      While(LLess(Local0, 2))
+      {
+        If(LEqual(Local0, 0)) { Store(FchXhci0PhyPort0, Local1) }
+        If(LEqual(Local0, 1)) { Store(FchXhci0PhyPort1, Local1) }
+        ShiftLeft(Local0, 13, Local2)
+        Or(Local2, BIT12, Local2)
+        Or(Local2, Local1, Local2)
+        RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local2)
+        And(Local2, 0xFFFFEFFF, Local2)
+        RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local2)
+        Or(Local2, BIT12, Local2)
+        RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local2)
+        Increment(Local0)
+      }
+
+      RwXhciIndReg(FCH_XHCI_IND60_REG50, 0xFFFFFFF0, 0x6)
+      RwXhciIndReg(FCH_XHCI_IND60_REG0C, 0xFFFFF00F, 0x00000220)
+      RwXhciIndReg(FCH_XHCI_IND60_REG08, 0x80FD00FF, 0)
+
+      Store(0, Local0)
+      While(LLess(Local0, 2))
+      {
+        FchXhciUsbPhyPortProgram02(Local0, 0x1E4)
+        Increment(Local0)
+      }
+
+      Store(0x00, Local0)                                  //Port
+      Store(0x1C4, Local1)                                 //DrivingStrength
+      While(LLess(Local0, 2))
+      {
+        ShiftLeft(Local0, 13, Local2)
+        Or(Local2, BIT12, Local2)
+        Or(Local2, Local1, Local2)
+        RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local2)
+        And(Local2, 0xFFFFEFFF, Local2)
+        RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local2)
+        Or(Local2, BIT12, Local2)
+        RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local2)
+        Increment(Local0)
+      }
+
+      Store(0x00, Local0)                                  //Port
+      While(LLess(Local0, 2))
+      {
+        Store(ReadXhciPhy(Local0, 0x380), Local1)
+        And(Local1, 0xF8, Local1)
+        Or(Local1, 0x5, Local1)
+        ShiftLeft(Local0, 13, Local2)
+        Or(Local2, BIT12, Local2)
+        Or(Local2, 0x380, Local2)
+        Or(Local2, Local1, Local2)
+        RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local2)
+        And(Local2, 0xFFFFEFFF, Local2)
+        RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local2)
+        Or(Local2, BIT12, Local2)
+        RwXhciIndReg(FCH_XHCI_IND60_REG00, 0xFFFFC000, Local2)
+        Increment(Local0)
+      }
+
+      RwXhciIndReg(FCH_XHCI_IND60_REG48, 0xFFFFFFE0, 0x1)
+    }
+    
+    Name(_PR0, Package() {P0X0})
+    Name(_PR3, Package() {P3X0})
+    Method(_DSW,3)
+    {
+      If(Arg0)
+      {
+//            Store(0x81, IO80)                    //enable
+      }
+      Else
+      {
+//            Store(0x8F, IO80)                    //disable
+      }
+    }
+    Method(_S0W,0)
+    {
+      Return(4)
+    }
+    Method(_PS0,0)
+    {
+      Store(0x80, IO80)
+      DeviceEnterD0 (DeviceControlXhci)
+      FchXhciInitIndirectReg() 
+      FchS0I3ReadyCheck()  
+    }
+    Method(_PS3,0)
+    {
+      Store(0x83, IO80)
+      DeviceEnterD3Hot (DeviceControlXhci)
+    }
+  }

@@ -1,0 +1,531 @@
+
+
+//SATA
+  Scope(\_SB.PCI0) {
+    PowerResource(P0SA, 0, 0) {
+      Method(_STA) {
+        Return(1)
+      }
+
+      Method(_ON) {
+        Store(0xA1, IO80)
+      }
+
+      Method(_OFF) {
+        Store(0xA2, IO80)
+        DeviceEnterD3Cold (DeviceControlSata)
+        FchS0I3ReadyCheck()
+      }
+    }
+    PowerResource(P3SA, 0, 0) {
+      Method(_STA) {
+        Return(1)
+      }
+
+      Method(_ON) {
+        Store(0xA4, IO80)
+//        Sleep(2000)
+      }
+
+      Method(_OFF) {
+        Store(0xA5, IO80)
+//        Sleep(2000)
+      }
+    }
+  }
+
+  Scope(\_SB.PCI0.SATA)
+  {
+
+  OperationRegion(SCFG, SystemMemory, 0xF8088000, 0x00100)
+  Field(SCFG, AnyAcc, NoLock, Preserve)
+  {
+		offset (0x00),
+                ST00, 16,
+                ST02, 16,
+                ST04, 32,
+                ST08, 32,
+                ST0C, 32,
+		offset (0x24),
+                STBA, 32,
+		offset (0x2C),
+                ST2C, 32,
+		offset (0x3C),
+                ST3C, 8,
+		offset (0x40),
+                STWE, 1,
+                CESL, 3,
+                DSXB, 1,
+                , 8,
+                DPAM, 1,
+
+		offset (0x44),
+                ST44, 16,
+                ST46, 8,
+                ,8,
+                ST48, 32,
+                ST4C, 32,
+		offset (0x52),
+                ST52, 8,
+		offset (0x61),
+                ST61, 8,
+		offset (0x71),
+                ST71, 8,
+		offset (0x80),
+                ST80, 9,
+                ,23,
+                //ST84, 32,
+                , 2,
+                RSTB, 1,
+                , 27,
+                PPDS, 1,
+                , 1,
+                ST88, 32,
+                ST8C, 8,
+                , 24,
+                ST90, 32,
+                ST94, 32,
+                ST98, 32,
+                ST9C, 32,
+                STA0, 8,
+                ,24,
+                STA4, 32,
+                STA8, 32,
+                STAC, 32,
+                STB0, 8,
+                , 8,
+                , 8,
+                STB3, 8,
+                STB4, 32,
+                STB8, 32,
+                STBC, 32,
+                STC0, 32,
+
+		offset (0xD0),
+                STD0, 32,
+
+		offset (0xF0),
+                STF0, 32,
+                STF4, 32,
+                STF8, 32,
+                STFC, 32
+  	}
+
+  OperationRegion(BAPM, SystemMemory, STBA, 0x001000)
+  Field(BAPM, AnyAcc, NoLock, Preserve)
+  {
+    offset(0x00),
+    MM00, 32,
+    MM04, 32,
+    //
+    offset(0xF4),
+    , 4,
+    CCSD, 1,
+    , 3,
+    CPD0, 1,
+    CPD1, 1,
+
+    offset(0xF8),
+    HPP0, 1,
+    HPP1, 1,
+    offset(0xFC),
+    , 10,
+    FBSS, 1,
+    SALP, 1,
+    SPM_, 1,
+    , 6,
+    CCCC, 1,
+    CSXS, 1,
+  }
+
+  OperationRegion(BBPM, SystemMemory, STBA, 0x001000)
+  Field(BBPM, AnyAcc, NoLock, Preserve)
+  {
+    offset(0xF4),
+    M0F4, 32, 
+    offset(0xF8),
+    M0F8, 32,
+    offset(0xFC),
+    M0FC, 32,
+  }
+
+  OperationRegion(APPM, SystemMemory, 0xFED80000, 0x001000)
+  Field(APPM, AnyAcc, NoLock, Preserve)
+  {
+    //
+    offset(0x137),
+    IO55, 8,
+    offset(0x13B),
+    IO59, 8,
+
+    offset(0x3DA),
+    DA00, 1,
+    , 1,
+    DA02, 1,
+    , 1,
+    SRCK, 4,
+
+    offset(0x3DE),
+    SPPC, 1,
+
+
+    offset(0xD37),
+    MP55, 8,
+    offset(0xD3B),
+    MP59, 8,
+  }
+
+  OperationRegion(SAPM, SystemMemory, \_SB.SABB, 0x001000)
+  Field(SAPM, AnyAcc, NoLock, Preserve)
+  {
+    // Todo: SATA parameters definition of FCH_SATA
+    MSIE, 8,          //BOOLEAN               SataMsiEnable;           
+    , 32,             //UINT32                SataIdeSsid;             
+    RDID, 32,         //UINT32                SataRaidSsid;            
+    R5ID, 32,         //UINT32                SataRaid5Ssid;           
+    AHID, 32,         //UINT32                SataAhciSsid;            
+//    MODE, 32,         //SATA_ST               SataMode;  
+    SMRG, 8,          //UINT8                 SataModeReg;                    ///< SataModeReg - Sata Controller Mode        
+    STEN, 8,          //BOOLEAN               SataEnable;                     ///< SataEnable - Sata Controller Function     
+    S6AC, 8,          //UINT8                 Sata6AhciCap;                   ///< Sata6AhciCap - Reserved */                
+    SSMG, 8,          //BOOLEAN               SataSetMaxGen2;                 ///< SataSetMaxGen2 - Set Sata Max Gen2 mode   
+    IDEN, 8,          //BOOLEAN               IdeEnable;                      ///< IdeEnable - Hidden IDE                    
+    SCMD, 8,          //UINT8                 SataClkMode;                    /// SataClkMode - Reserved                     
+    CLAS, 32,         //SATA_CLASS            SataClass;               
+    , 8,              //UINT8                 SataIdeMode;             
+    , 8,              //UINT8                 SataDisUnusedIdePChannel;
+    , 8,              //UINT8                 SataDisUnusedIdeSChannel;
+    , 8,              //UINT8                 IdeDisUnusedIdePChannel; 
+    , 8,              //UINT8                 IdeDisUnusedIdeSChannel; 
+    , 8,              //UINT8                 SataOptionReserved;      
+    , 8,   //SataEspPort
+    ESP0, 8,
+    ESP1, 8,
+    ESP2, 8,
+    ESP3, 8,
+    , 8,
+    , 8,
+    , 8,
+    , 8,
+    , 8,   //SataPortPower
+    PPW0, 8,
+    PPW1, 8,
+    PPW2, 8,
+    PPW3, 8,
+    , 8,
+    , 8,
+    , 8,
+    , 8,
+    , 16,   //SataPortMode
+    PMD0, 8,
+    PMD1, 8,
+    PMD2, 8,
+    PMD3, 8,
+    , 8,
+    , 8,
+    , 8,
+    , 8,
+    ALPC, 8,          //UINT8                 SataAggrLinkPmCap;           
+    PTMC, 8,          //UINT8                 SataPortMultCap;             
+    CKAO, 8,          //UINT8                 SataClkAutoOff;              
+    PSCC, 8,          //UINT8                 SataPscCap;                  
+    BOHO, 8,          //UINT8                 BiosOsHandOff;               
+    SFBS, 8,          //UINT8                 SataFisBasedSwitching;       
+    CCCS, 8,          //UINT8                 SataCccSupport;              
+    SSCC, 8,          //UINT8                 SataSscCap;                  
+    MSIC, 8,          //UINT8                 SataMsiCapability;           
+    SFRD, 8,          //UINT8                 SataForceRaid;               
+    I100, 8,          //UINT8                 SataInternal100Spread;       
+    SDDM, 8,          //UINT8                 SataDebugDummy;              
+    TGT8, 8,          //UINT8                 SataTargetSupport8Device;    
+    SDGM, 8,          //UINT8                 SataDisableGenericMode;      
+    SAEM, 8,          //BOOLEAN               SataAhciEnclosureManagement; 
+    GIO0, 8,          //UINT8                 SataSgpio0;                  
+    GIO1, 8,          //UINT8                 SataSgpio1;                  
+    PPSD, 8,          //UINT8                 SataPhyPllShutDown;          
+    SHRE, 8,          //BOOLEAN               SataHotRemovalEnh;           
+    , 8,   //SataHotRemovalEnhPort
+    HRP0, 8,
+    HRP1, 8,
+    HRP2, 8,
+    HRP3, 8,
+    , 8,
+    , 8,
+    , 8,
+    , 8,
+    SODE, 8,             //BOOLEAN               SataOobDetectionEnh;        
+    SPSE, 1,             //BOOLEAN               SataPowerSavingEnh;
+    ,7,         
+    SMPS, 8,             //UINT8                 SataMemoryPowerSaving;      
+    RASS, 8,             //BOOLEAN               SataRasSupport;             
+    ADPF, 8,             //BOOLEAN               SataAhciDisPrefetchFunction;
+    DSP0, 8,             //BOOLEAN               SataDevSlpPort0;            
+    DSP1, 8,             //BOOLEAN               SataDevSlpPort1;            
+    MMIO, 32,            //UINT32                TempMmio;                   
+  }
+
+    Name (SVBF, Buffer (0x200) {0})
+    CreateWordField(SVBF, 0x02, S002)
+    CreateDWordField(SVBF, 0x08, S008)
+    CreateDWordField(SVBF, 0x2C, S02C)
+    CreateDWordField(SVBF, 0x40, S040)
+    CreateByteField(SVBF, 0x46, S046)
+    CreateDWordField(SVBF, 0x48, S048)
+    CreateDWordField(SVBF, 0x4C, S04C)
+    CreateByteField(SVBF, 0x52, S052)
+    CreateByteField(SVBF, 0x61, S061)
+    CreateByteField(SVBF, 0x71, S071)
+    CreateDWordField(SVBF, 0x84, S084)
+    CreateDWordField(SVBF, 0x88, S088)
+    CreateDWordField(SVBF, 0x8C, S08C)
+    CreateDWordField(SVBF, 0x90, S090)
+    CreateDWordField(SVBF, 0x94, S094)
+    CreateDWordField(SVBF, 0x98, S098)
+    CreateDWordField(SVBF, 0x9C, S09C)
+    CreateDWordField(SVBF, 0xA0, S0A0)
+    CreateDWordField(SVBF, 0xA4, S0A4)
+    CreateDWordField(SVBF, 0xA8, S0A8)
+    CreateDWordField(SVBF, 0xAC, S0AC)
+    CreateDWordField(SVBF, 0xB0, S0B0)
+    CreateDWordField(SVBF, 0xB4, S0B4)
+    CreateDWordField(SVBF, 0xB8, S0B8)
+    CreateDWordField(SVBF, 0xBC, S0BC)
+    CreateDWordField(SVBF, 0xC0, S0C0)
+    CreateDWordField(SVBF, 0xC4, S0C4)
+    CreateDWordField(SVBF, 0xC8, S0C8)
+    CreateDWordField(SVBF, 0xCC, S0CC)
+    CreateDWordField(SVBF, 0xD0, S0D0)
+    CreateDWordField(SVBF, 0xD4, S0D4)
+    CreateDWordField(SVBF, 0xD8, S0D8)
+    CreateDWordField(SVBF, 0xDC, S0DC)
+    CreateDWordField(SVBF, 0xE0, S0E0)
+    CreateDWordField(SVBF, 0xE4, S0E4)
+    CreateDWordField(SVBF, 0xE8, S0E8)
+    CreateDWordField(SVBF, 0xEC, S0EC)
+    CreateDWordField(SVBF, 0xF0, S0F0)
+    CreateDWordField(SVBF, 0xF4, S0F4)
+    CreateDWordField(SVBF, 0xF8, S0F8)
+    CreateDWordField(SVBF, 0xFC, S0FC)
+
+    CreateDWordField(SVBF, 0x100, S100)
+    CreateDWordField(SVBF, 0x104, S104)
+    CreateDWordField(SVBF, 0x108, S108)
+    CreateDWordField(SVBF, 0x10C, S10C)
+    CreateDWordField(SVBF, 0x110, S110)
+    CreateDWordField(SVBF, 0x114, S114)
+    CreateDWordField(SVBF, 0x118, S118)
+    CreateDWordField(SVBF, 0x11C, S11C)
+    CreateDWordField(SVBF, 0x120, S120)
+    CreateDWordField(SVBF, 0x124, S124)
+    CreateDWordField(SVBF, 0x128, S128)
+    CreateDWordField(SVBF, 0x12C, S12C)
+
+    CreateDWordField(SVBF, 0x1F4, S1F4)
+    CreateDWordField(SVBF, 0x1F8, S1F8)
+    CreateDWordField(SVBF, 0x1FC, S1FC)
+
+      Method(SAVE,0)
+      {
+        if (LEqual(S008, 0)) {
+//breakpoint
+          Store(ST02, S002)
+          Store(ST08, S008)
+
+          Store(M0F4, S1F4)
+          Store(M0F8, S1F8)
+          Store(M0FC, S1FC)
+
+          Store(0x0130, ST80) Store(ST98, S100) Store(ST9C, S110)
+          Store(0x0120, ST80) Store(ST98, S104) Store(ST9C, S114)
+          Store(0x0110, ST80) Store(ST98, S108) Store(ST9C, S118)
+          Store(0x0010, ST80)            
+
+          Store(ST4C, S04C)
+          Store(0, CESL) Store(ST48, S120)
+          Store(1, CESL) Store(ST48, S124)
+          Store(2, CESL) Store(ST48, S128)
+
+          Store(ST52, S052)
+          Store(ST61, S061)
+          Store(ST71, S071)
+
+          Store(ST8C, S08C)
+          Store(ST46, S046)
+          Store(PPDS, S084)
+          Store(ST88, S088)
+          Store(ST94, S094)
+          Store(DPAM, S040)
+
+        }
+      }
+
+      Method(RSTO,0)
+      {
+        if (S008) {
+//breakpoint
+          Store(S08C, ST8C)
+          Store(zero, RSTB)
+          Sleep(1)
+          Store(One, RSTB)
+
+          Store(S04C, ST4C)
+          Store(0, CESL) Store(S120, ST48)
+          Store(1, CESL) Store(S124, ST48)
+          Store(2, CESL) Store(S128, ST48)
+
+          //Enable Write
+          Store(1, STWE)  
+          Store(S002, ST02)
+          Store(S008, ST08)
+
+          Store(S1F4, M0F4)
+          Store(S1F8, M0F8)
+          Store(S1FC, M0FC)
+
+          Store(0x0130, ST80) Store(S100, ST98) Store(S110, ST9C)
+          Store(0x0120, ST80) Store(S104, ST98) Store(S114, ST9C)
+          Store(0x0110, ST80) Store(S108, ST98) Store(S118, ST9C)
+          Store(0x0010, ST80)            
+
+
+          Store(S052, ST52)
+          Store(S061, ST61)
+          Store(S071, ST71)
+
+          Store(S046, ST46)
+          Store(S084, PPDS)
+          Store(S088, ST88)
+          Store(S094, ST94)
+          Store(S040, DPAM)
+
+          Store(0, STWE)
+        }    
+      }
+
+
+      Method(STI_,0)
+      {
+      //breakpoint
+
+        //Enable Write
+        Store(1, STWE)  
+        
+        
+        Or(ST44, 1, ST44) 
+        Store(0x20, ST46)
+        Store(0, DSXB)
+        Or(ST48, 0x80000000, ST48)
+        Store(zero, PPDS)
+
+        //2.17.3.4 SATA PHY REference Clock Selection TBD
+        Store(STEN, DA00)
+        Store(SSMG, DA02)
+        Store(SCMD, SRCK)
+        if (LEqual(SCMD, 0)) {Store(0xF0, ST8C)}
+        if (LEqual(SCMD, 9)) {Store(0xF0, ST8C)}
+        if (LEqual(SCMD, 1)) {Store(0x7D, ST8C)}
+        Store(zero, RSTB)
+        Sleep(1)
+        Store(One, RSTB)
+
+        And(ST4C, 0xFDFDFCFE, ST4C)
+        Or(ST4C, 0x02020301, ST4C)
+        Store(0, CESL) Store(0xc0070800, ST48)
+        Store(1, CESL) Store(0x2188, ST48)
+        Store(2, CESL) Store(0x10EA, ST48)
+
+        
+
+        //2.17.3.1 SATA Operating Mode
+        if (LEqual(CLAS,2)) {Store(0x01060100, ST08) Store(0x7801, ST02)} //AHCI
+        if (LEqual(CLAS,5)) {Store(0x01060100, ST08) Store(0x7804, ST02)} //AMD AHCI
+        if (LEqual(CLAS,6)) {Store(0x01060100, ST08) Store(0x7804, ST02)} //AMD AHCI
+
+        //2.17.3.3 SATA PHY Fine Tuning
+        Store(0x0030, ST80) Store(0x0040F407, ST98)                     //  0x0030, 0x0040F407,             
+        Store(0x0031, ST80) Store(0x0040F407, ST98)                     //  0x0030, 0x0040F407,             
+        Store(0x0130, ST80) Store(0x0F8F1A86, ST9C)                    //  0x0030, 0x0040F407,             
+        Store(0x0120, ST80) Store(0x00403204, ST98) Store(0x0F810AA4, ST9C)                    //  0x0120, 0x00403204,             
+        Store(0x0110, ST80) Store(0x00403103, ST98) Store(0x0F810A86, ST9C)                    //  0x0110, 0x00403103, 
+        Store(0x0010, ST80)            
+
+
+        //2.17.3.5 External SATA Ports Configuration
+        if (Lor(HRP0, HRP1)) { Store(HRP0, HPP0) Store(HRP1, HPP1) Store(One, CSXS) }
+
+        //2.17.3.6 SATA Device Sleep Feature Enablement
+        if (LEqual(DSP0, 1)) { 
+          Store(0x01, MP55) 
+          Store(0x3e, IO55) 
+          Store(One, CCSD) 
+          Store(One, CPD0) 
+        }
+        if (LEqual(DSP1, 1)) { 
+          Store(0x01, MP59) 
+          Store(0x3e, IO59) 
+          Store(One, CCSD) 
+          Store(One, CPD1) 
+        }
+
+        //2.17.3.7.4 PHY PLL Dynamic Shutdown
+        if (PPSD) { Store(one, PPDS) }
+
+        //2.17.3.7.5
+        if (SPSE) { Or(ST4C, 0x20000000, ST4C) } 
+
+        //2.17.3.7.6
+        Store(ALPC, SALP) 
+
+        //2.17.3.8
+        Store(PTMC, SPM_)
+        Store(SFBS, FBSS)
+        Store(CCCS, CCCC)
+
+
+        //SataMsiCapability
+        if (MSIC) {And(ST52, 0xF1, ST52) Or(ST52, 0x06, ST52)}
+        else {Store(0x70, ST61)}
+        Store(0x00, ST71)
+
+
+        Store(0, STWE)  
+                 
+      //breakpoint
+      }                                                      
+    Name(_PR0, Package() {P0SA})
+    Name(_PR3, Package() {P3SA})
+    Method(_DSW,3)
+    {
+      If(Arg0)
+      {
+      }
+      Else
+      {
+      }
+    }
+    Method(_S0W,0)
+    {
+      Return(4)
+    }
+    Method(_PS0,0)
+    {
+      Store(0xA0, IO80)
+//breakpoint
+//      if (LEqual(ST02, 0x7800)) { STI_() }
+//      STI_()
+      RSTO ()
+//breakpoint
+//      Store(0x00D5, SMPC)  
+//breakpoint
+//      Sleep(2000)
+      DeviceEnterD0 (DeviceControlSata)
+      FchS0I3ReadyCheck()
+    }
+    Method(_PS3,0)
+    {
+      Store(0xA3, IO80)
+      SAVE ()
+//      Sleep(2000)
+      DeviceEnterD3Hot (DeviceControlSata)
+    }
+  }

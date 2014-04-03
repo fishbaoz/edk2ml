@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup Label="ProjectConfigurations">
+		<ProjectConfiguration Include="Debug|Win32">
+			<Configuration>Debug</Configuration>
+			<Platform>Win32</Platform>
+		</ProjectConfiguration>
+		<ProjectConfiguration Include="Release|Win32">
+			<Configuration>Release</Configuration>
+			<Platform>Win32</Platform>
+		</ProjectConfiguration>
+	</ItemGroup>
+	<PropertyGroup Label="Globals" Condition="1==1">
+		<RootNamespace>Agesa_B1_Target_VS2010</RootNamespace>
+		<ProjectGuid>{ECF17987-2834-4BA4-B910-74EF07C19C0C}</ProjectGuid>
+		<Keyword>Win32Proj</Keyword>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+	<PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+		<ConfigurationType>DynamicLibrary</ConfigurationType>
+		<WholeProgramOptimization>true</WholeProgramOptimization>
+		<UseDebugLibraries>false</UseDebugLibraries>
+		<CharacterSet>Unicode</CharacterSet>
+		<LinkIncremental>false</LinkIncremental>
+		<OutDir>$(AGESA_OptsDir)$(ConfigurationName)\</OutDir>
+		<IntDir>$(AGESA_OptsDir)$(ConfigurationName)\B1\</IntDir>
+		<TargetExt>.dll</TargetExt>
+		<ExtensionsToDeleteOnClean>*.obj;*.lib;*.tmp;*.dll;*.B1;*.BDI;$(IntDir)$(ProjectName)_BuildLog.htm</ExtensionsToDeleteOnClean>
+		<ExecutablePath>$(ExecutablePath)</ExecutablePath>
+		<IncludePath/>
+		<ReferencePath/>
+		<LibraryPath/>
+		<SourcePath/>
+		<ExcludePath/>
+		<GenerateManifest>false</GenerateManifest>
+		<LinkDelaySign/>
+	</PropertyGroup>
+	<PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+		<ConfigurationType>DynamicLibrary</ConfigurationType>
+		<WholeProgramOptimization>true</WholeProgramOptimization>
+		<UseDebugLibraries>false</UseDebugLibraries>
+		<CharacterSet>Unicode</CharacterSet>
+		<LinkIncremental>false</LinkIncremental>
+		<OutDir>$(AGESA_OptsDir)$(ConfigurationName)\</OutDir>
+		<IntDir>$(AGESA_OptsDir)$(ConfigurationName)\B1\</IntDir>
+		<TargetExt>.dll</TargetExt>
+		<ExtensionsToDeleteOnClean>*.obj;*.lib;*.tmp;*.dll;*.B1;*.BDI;$(IntDir)$(ProjectName)_BuildLog.htm</ExtensionsToDeleteOnClean>
+		<ExecutablePath>$(ExecutablePath)</ExecutablePath>
+		<IncludePath/>
+		<ReferencePath/>
+		<LibraryPath/>
+		<SourcePath/>
+		<ExcludePath/>
+		<GenerateManifest>false</GenerateManifest>
+		<LinkDelaySign/>
+	</PropertyGroup>
+	<ImportGroup Label="ExtensionSettings">
+		<Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props"/>
+	</ImportGroup>
+	<PropertyGroup Label="UserMacros" Condition="2==2"/>
+	<PropertyGroup Condition="3==3">
+		<_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+		<OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(AGESA_OptsDir)$(Configuration)\</OutDir>
+		<IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(AGESA_OptsDir)$(Configuration)\$(ProjectName)\</IntDir>
+		<ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">*.obj%3b*.lib%3b*.tmp%3b*.dll%3b*.B1%3b*.BDI%3b$(IntDir)$(ProjectName)_BuildLog.htm</ExtensionsToDeleteOnClean>
+		<OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(AGESA_OptsDir)$(Configuration)\</OutDir>
+		<IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(AGESA_OptsDir)$(Configuration)\$(ProjectName)\</IntDir>
+		<ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">*.obj%3b*.lib%3b*.tmp%3b*.dll%3b*.B1%3b*.BDI%3b$(IntDir)$(ProjectName)_BuildLog.htm</ExtensionsToDeleteOnClean>
+	</PropertyGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+		<BuildLog>
+			<Path>$(IntDir)$(ProjectName)_BuildLog.htm</Path>
+		</BuildLog>
+		<MASM>
+			<IncludePaths>"$(AGESA_ROOT)\UEFI\Include";"$(AGESA_ROOT)\Legacy";"$(AGESA_ROOT)\";</IncludePaths>
+		</MASM>
+		<ClCompile>
+			<AdditionalOptions>/Gs16384 %(AdditionalOptions)</AdditionalOptions>
+			<AdditionalIncludeDirectories>"$(AGESA_OptsDir)";"$(AGESA_ROOT)";"$(AGESA_ROOT)Proc\CPU\";"$(AGESA_ROOT)Proc\CPU\Family\";"$(AGESA_ROOT)Include\";"$(AGESA_ROOT)Proc\IDS\";"$(AGESA_ROOT)Lib\";"$(AGESA_ROOT)Proc\CPU\Feature\";"$(AGESA_ROOT)";"$(AGESA_ROOT)Include\";"$(AGESA_ROOT)Proc\CPU\";"$(AGESA_ROOT)Proc\CPU\Family\";"$(AGESA_ROOT)Proc\IDS\";"$(AGESA_ROOT)Proc\Common\";"$(AGESA_ROOT)Proc\CPU\Feature\";"$(AGESA_ROOT)Proc\Topology\";"$(AGESA_ROOT)Proc\Mem\";"$(AGESA_ROOT)Proc\IDS\Debug\";"$(AGESA_ROOT)Proc\Recovery\Mem\";"$(AGESA_ROOT)Proc\GNB\Common\";"$(AGESA_ROOT)Proc\GNB\Modules\GnbInitML\";</AdditionalIncludeDirectories>
+			<Optimization>MinSpace</Optimization>
+			<FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+			<WholeProgramOptimization>true</WholeProgramOptimization>
+			<IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+			<BufferSecurityCheck>false</BufferSecurityCheck>
+			<DisableLanguageExtensions>true</DisableLanguageExtensions>
+			<ObjectFileName>$(IntDir)</ObjectFileName>
+			<ProgramDataBaseFileName>$(IntDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+			<XMLDocumentationFileName>$(IntDir)</XMLDocumentationFileName>
+			<WarningLevel>Level4</WarningLevel>
+			<TreatWarningAsError>true</TreatWarningAsError>
+			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+			<CompileAs>CompileAsC</CompileAs>
+			<PrecompiledHeader>NotUsing</PrecompiledHeader>
+			<PreprocessorDefinitions>B1_IMAGE</PreprocessorDefinitions>
+			<UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
+			<StringPooling>false</StringPooling>
+			<MinimalRebuild>false</MinimalRebuild>
+			<ExceptionHandling>Sync</ExceptionHandling>
+			<BasicRuntimeChecks>Default</BasicRuntimeChecks>
+			<RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+			<FunctionLevelLinking>false</FunctionLevelLinking>
+			<FloatingPointExceptions>false</FloatingPointExceptions>
+			<RuntimeTypeInfo>true</RuntimeTypeInfo>
+			<OpenMPSupport>false</OpenMPSupport>
+			<PrecompiledHeaderFile/>
+			<PrecompiledHeaderOutputFile/>
+			<AssemblerListingLocation/>
+			<BrowseInformationFile/>
+		</ClCompile>
+		<Bscmake>
+			<OutputFile>$(OutDir)$(ProjectName).bsc</OutputFile>
+		</Bscmake>
+		<Lib>
+			<OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+		</Lib>
+		<Link>
+			<SubSystem>Console</SubSystem>
+			<AdditionalOptions>"/ignore:4096,4108"</AdditionalOptions>
+			<GenerateDebugInformation>true</GenerateDebugInformation>
+			<OutputFile>$(AGESA_OptsDir)$(ConfigurationName)\$(ProjectName).dll</OutputFile>
+			<AdditionalLibraryDirectories>"$(OutDir)$(ConfigurationName)"</AdditionalLibraryDirectories>
+			<AdditionalDependencies>$(NOINHERIT)</AdditionalDependencies>
+			<IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+			<ManifestFile>$(IntDir)$(TargetFileName).intermediate.manifest</ManifestFile>
+			<ProgramDatabaseFile>$(AGESA_OptsDir)$(ConfigurationName)\$(TargetFileName).pdb</ProgramDatabaseFile>
+			<GenerateMapFile>true</GenerateMapFile>
+			<MapFileName>$(AGESA_OptsDir)$(ConfigurationName)\$(TargetFileName).map</MapFileName>
+			<AssemblyDebug>false</AssemblyDebug>
+			<HeapReserveSize>0</HeapReserveSize>
+			<HeapCommitSize>0</HeapCommitSize>
+			<StackReserveSize>0</StackReserveSize>
+			<StackCommitSize>0</StackCommitSize>
+			<OptimizeReferences>true</OptimizeReferences>
+			<EnableCOMDATFolding>true</EnableCOMDATFolding>
+			<LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+			<EntryPointSymbol>AmdAgesaDispatcher</EntryPointSymbol>
+			<BaseAddress>0</BaseAddress>
+			<RandomizedBaseAddress>true</RandomizedBaseAddress>
+			<FixedBaseAddress>false</FixedBaseAddress>
+			<ImportLibrary>$(TargetDir)$(TargetName).lib</ImportLibrary>
+			<CLRUnmanagedCodeCheck>false</CLRUnmanagedCodeCheck>
+			<DataExecutionPrevention>false</DataExecutionPrevention>
+			<SectionAlignment>16</SectionAlignment>
+		</Link>
+		<PostBuildEvent>
+			<Message>BINUTIL2 B1 Image</Message>
+			<Command>$(AGESA_ROOT)AMDTools\binutil2 /INFILE:$(OutDir)$(ProjectName).dll /OUTFILE:$(OutDir)agesa.b1 /IMAGETYPE:B1 /IMAGEBASE:$(AGESA_B1_ADDRESS) /BDIFILE:$(OutDir)Agesa_B1.bdi</Command>
+		</PostBuildEvent>
+	</ItemDefinitionGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+		<BuildLog>
+			<Path>$(IntDir)$(ProjectName)_BuildLog.htm</Path>
+		</BuildLog>
+		<MASM>
+			<IncludePaths>"$(AGESA_ROOT)\UEFI\Include";"$(AGESA_ROOT)\Legacy";"$(AGESA_ROOT)\";</IncludePaths>
+		</MASM>
+		<ClCompile>
+			<AdditionalOptions>/Gs16384 %(AdditionalOptions)</AdditionalOptions>
+			<AdditionalIncludeDirectories>"$(AGESA_OptsDir)";"$(AGESA_ROOT)";"$(AGESA_ROOT)Proc\CPU\";"$(AGESA_ROOT)Proc\CPU\Family\";"$(AGESA_ROOT)Include\";"$(AGESA_ROOT)Proc\IDS\";"$(AGESA_ROOT)Lib\";"$(AGESA_ROOT)Proc\CPU\Feature\";"$(AGESA_ROOT)";"$(AGESA_ROOT)Include\";"$(AGESA_ROOT)Proc\CPU\";"$(AGESA_ROOT)Proc\CPU\Family\";"$(AGESA_ROOT)Proc\IDS\";"$(AGESA_ROOT)Proc\Common\";"$(AGESA_ROOT)Proc\CPU\Feature\";"$(AGESA_ROOT)Proc\Topology\";"$(AGESA_ROOT)Proc\Mem\";"$(AGESA_ROOT)Proc\IDS\Debug\";"$(AGESA_ROOT)Proc\Recovery\Mem\";"$(AGESA_ROOT)Proc\GNB\Common\";"$(AGESA_ROOT)Proc\GNB\Modules\GnbInitML\";</AdditionalIncludeDirectories>
+			<Optimization>MinSpace</Optimization>
+			<FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+			<WholeProgramOptimization>true</WholeProgramOptimization>
+			<IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+			<BufferSecurityCheck>false</BufferSecurityCheck>
+			<DisableLanguageExtensions>true</DisableLanguageExtensions>
+			<ObjectFileName>$(IntDir)</ObjectFileName>
+			<ProgramDataBaseFileName>$(IntDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+			<XMLDocumentationFileName>$(IntDir)</XMLDocumentationFileName>
+			<WarningLevel>Level4</WarningLevel>
+			<TreatWarningAsError>true</TreatWarningAsError>
+			<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+			<CompileAs>CompileAsC</CompileAs>
+			<PrecompiledHeader>NotUsing</PrecompiledHeader>
+			<PreprocessorDefinitions>B1_IMAGE</PreprocessorDefinitions>
+			<UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
+			<StringPooling>false</StringPooling>
+			<MinimalRebuild>false</MinimalRebuild>
+			<ExceptionHandling>Sync</ExceptionHandling>
+			<BasicRuntimeChecks>Default</BasicRuntimeChecks>
+			<RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+			<FunctionLevelLinking>false</FunctionLevelLinking>
+			<FloatingPointExceptions>false</FloatingPointExceptions>
+			<RuntimeTypeInfo>true</RuntimeTypeInfo>
+			<OpenMPSupport>false</OpenMPSupport>
+			<PrecompiledHeaderFile/>
+			<PrecompiledHeaderOutputFile/>
+			<AssemblerListingLocation/>
+			<BrowseInformationFile/>
+		</ClCompile>
+		<Bscmake>
+			<OutputFile>$(OutDir)$(ProjectName).bsc</OutputFile>
+		</Bscmake>
+		<Lib>
+			<OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+		</Lib>
+		<Link>
+			<SubSystem>Console</SubSystem>
+			<AdditionalOptions>"/ignore:4096,4108"</AdditionalOptions>
+			<GenerateDebugInformation>true</GenerateDebugInformation>
+			<OutputFile>$(AGESA_OptsDir)$(ConfigurationName)\$(ProjectName).dll</OutputFile>
+			<AdditionalLibraryDirectories>"$(OutDir)$(ConfigurationName)"</AdditionalLibraryDirectories>
+			<AdditionalDependencies>$(NOINHERIT)</AdditionalDependencies>
+			<IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+			<ManifestFile>$(IntDir)$(TargetFileName).intermediate.manifest</ManifestFile>
+			<ProgramDatabaseFile>$(AGESA_OptsDir)$(ConfigurationName)\$(TargetFileName).pdb</ProgramDatabaseFile>
+			<GenerateMapFile>true</GenerateMapFile>
+			<MapFileName>$(AGESA_OptsDir)$(ConfigurationName)\$(TargetFileName).map</MapFileName>
+			<AssemblyDebug>false</AssemblyDebug>
+			<HeapReserveSize>0</HeapReserveSize>
+			<HeapCommitSize>0</HeapCommitSize>
+			<StackReserveSize>0</StackReserveSize>
+			<StackCommitSize>0</StackCommitSize>
+			<OptimizeReferences>true</OptimizeReferences>
+			<EnableCOMDATFolding>true</EnableCOMDATFolding>
+			<LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+			<EntryPointSymbol>AmdAgesaDispatcher</EntryPointSymbol>
+			<BaseAddress>0</BaseAddress>
+			<RandomizedBaseAddress>true</RandomizedBaseAddress>
+			<FixedBaseAddress>false</FixedBaseAddress>
+			<ImportLibrary>$(TargetDir)$(TargetName).lib</ImportLibrary>
+			<CLRUnmanagedCodeCheck>false</CLRUnmanagedCodeCheck>
+			<DataExecutionPrevention>false</DataExecutionPrevention>
+			<SectionAlignment>16</SectionAlignment>
+		</Link>
+		<PostBuildEvent>
+			<Message>BINUTIL2 B1 Image</Message>
+			<Command>$(AGESA_ROOT)AMDTools\binutil2 /INFILE:$(OutDir)$(ProjectName).dll /OUTFILE:$(OutDir)agesa.b1 /IMAGETYPE:B1 /IMAGEBASE:$(AGESA_B1_ADDRESS) /BDIFILE:$(OutDir)Agesa_B1.bdi</Command>
+		</PostBuildEvent>
+	</ItemDefinitionGroup>
+	<ItemGroup Label="Sources">
+		<ClCompile Include="$(AGESA_OptsDir)$(Solution)RecoveryOptions.c"/>
+		<ClCompile Include=".\agesaCallouts.c"/>
+		<ClCompile Include=".\Dispatcher.c"/>
+		<ClCompile Include=".\hobTransfer.c"/>
+	</ItemGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+	<ImportGroup Label="ExtensionTargets">
+		<Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets"/>
+	</ImportGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Lib\AMD_Lib_VS2010.vcxproj">
+			<Project>{321389F2-D8C9-4C9F-B22B-33A8D23B495B}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Lib\IA32\AMD_Lib_IA32_VS2010.vcxproj">
+			<Project>{F1B6DE43-4D72-4368-90E9-CB10F8FFEE21}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Common\AMD_Proc_Common_VS2010.vcxproj">
+			<Project>{48C5EC54-3891-4449-BBB0-80902E403C8F}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\CPU\AMD_Proc_CPU_VS2010.vcxproj">
+			<Project>{44973602-D8C0-4CCF-BBD5-153369F10DDB}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\CPU\Family\0x16\AMD_Proc_CPU_Family_0x16_VS2010.vcxproj">
+			<Project>{9B774AE6-F67D-4A1A-9BC2-EF8B03F85F3E}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\CPU\Family\0x16\ML\AMD_Proc_CPU_Family_0x16_ML_VS2010.vcxproj">
+			<Project>{504FA1D8-CCC8-47F5-9CF3-02E82476713C}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\CPU\Feature\AMD_Proc_CPU_Feature_VS2010.vcxproj">
+			<Project>{168FD994-550A-4B6B-9E6B-2BC83848FE20}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Fch\Avalon\AMD_Proc_Fch_Avalon_VS2010.vcxproj">
+			<Project>{E4EA3F08-490F-4736-966C-C2E100D05414}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Fch\Avalon\AvalonAzalia\AMD_Proc_Fch_Avalon_AvalonAzalia_VS2010.vcxproj">
+			<Project>{9EE5A186-611E-4AC7-9D1D-EEBAC0D79BB2}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Fch\Avalon\AvalonHwAcpi\AMD_Proc_Fch_Avalon_AvalonHwAcpi_VS2010.vcxproj">
+			<Project>{25838AF3-A52E-405A-8D09-6BDAA869C024}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Fch\Avalon\AvalonHwm\AMD_Proc_Fch_Avalon_AvalonHwm_VS2010.vcxproj">
+			<Project>{0B21358F-CE1F-473D-A8EB-DEEE6C0C55A7}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Fch\Avalon\AvalonImc\AMD_Proc_Fch_Avalon_AvalonImc_VS2010.vcxproj">
+			<Project>{EB43FABB-F259-415C-AA41-F8D32AFDF04E}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Fch\Avalon\AvalonInterface\AMD_Proc_Fch_Avalon_AvalonInterface_VS2010.vcxproj">
+			<Project>{2A1D63CD-A28F-483B-926E-192DCEA195A4}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Fch\Avalon\AvalonIr\AMD_Proc_Fch_Avalon_AvalonIr_VS2010.vcxproj">
+			<Project>{939D5234-E5F2-46EA-B4DC-315845C7EB76}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Fch\Avalon\AvalonPcie\AMD_Proc_Fch_Avalon_AvalonPcie_VS2010.vcxproj">
+			<Project>{3AC4BA05-0324-4DA1-A209-C0515903B083}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Fch\Avalon\AvalonSata\AMD_Proc_Fch_Avalon_AvalonSata_VS2010.vcxproj">
+			<Project>{EAAC1ED6-7747-4F3A-93C8-96CB07CDCC1C}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Fch\Avalon\AvalonSd\AMD_Proc_Fch_Avalon_AvalonSd_VS2010.vcxproj">
+			<Project>{07295720-FBE4-4D86-B109-DB6899EE68A2}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Fch\Avalon\AvalonSpi\AMD_Proc_Fch_Avalon_AvalonSpi_VS2010.vcxproj">
+			<Project>{AD6817C5-E491-4841-991C-75EB50E2048A}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Fch\Avalon\AvalonUsb\AMD_Proc_Fch_Avalon_AvalonUsb_VS2010.vcxproj">
+			<Project>{9AAB7AD7-D330-4867-A296-D0DA301E7D9D}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Fch\Common\AMD_Proc_Fch_Common_VS2010.vcxproj">
+			<Project>{7BE194F4-3BD2-4047-B74C-130D753A188C}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\AMD_Proc_GNB_VS2010.vcxproj">
+			<Project>{319E0438-A27B-4706-80EA-B0366F08DBB9}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Common\AMD_Proc_GNB_Common_VS2010.vcxproj">
+			<Project>{9D08A1AB-0A1F-4D0B-B287-5641E20870CA}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbCommonLib\AMD_Proc_GNB_Modules_GnbCommonLib_VS2010.vcxproj">
+			<Project>{70498F07-62CA-4D3B-BC14-77645B2AD892}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbFamTranslation\AMD_Proc_GNB_Modules_GnbFamTranslation_VS2010.vcxproj">
+			<Project>{AD71E41D-E27A-4B2A-852B-3258BCA7476C}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbGfxConfig\AMD_Proc_GNB_Modules_GnbGfxConfig_VS2010.vcxproj">
+			<Project>{18E34D26-6DE6-4399-B150-DDB3F0B938B6}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbGfxInitLibV1\AMD_Proc_GNB_Modules_GnbGfxInitLibV1_VS2010.vcxproj">
+			<Project>{96B602B1-2D40-4799-BB81-13CDADCD5A16}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbGfxIntTableV3\AMD_Proc_GNB_Modules_GnbGfxIntTableV3_VS2010.vcxproj">
+			<Project>{955F630C-E492-42E0-9B44-57731164AAB5}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbInitML\AMD_Proc_GNB_Modules_GnbInitML_VS2010.vcxproj">
+			<Project>{1D93031A-1A2D-45E7-B0C8-7E98C5CCE0CA}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbIoapic\AMD_Proc_GNB_Modules_GnbIoapic_VS2010.vcxproj">
+			<Project>{92C55F81-A2F5-4013-95AE-158A004E06F4}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbIommuIvrs\AMD_Proc_GNB_Modules_GnbIommuIvrs_VS2010.vcxproj">
+			<Project>{C229EBF3-6BC4-4329-8DF2-93682BA9F6A2}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbIommuScratch\AMD_Proc_GNB_Modules_GnbIommuScratch_VS2010.vcxproj">
+			<Project>{E4F57EF9-3D4F-4EC0-99D0-CD84268BEC0C}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbIvrsLib\AMD_Proc_GNB_Modules_GnbIvrsLib_VS2010.vcxproj">
+			<Project>{78F461DF-DA4E-4001-8C9A-AF22E03E4AD3}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbNbInitLibV1\AMD_Proc_GNB_Modules_GnbNbInitLibV1_VS2010.vcxproj">
+			<Project>{3FE4FB7D-AE24-43D3-8610-4CE48995CC52}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbNbInitLibV4\AMD_Proc_GNB_Modules_GnbNbInitLibV4_VS2010.vcxproj">
+			<Project>{3145496C-7918-47D8-B3EA-80CA638AD5E8}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbNbInitLibV5\AMD_Proc_GNB_Modules_GnbNbInitLibV5_VS2010.vcxproj">
+			<Project>{3B3F2DDF-1EFD-4C4A-B309-39F53B7E2211}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbPcieAlibV2\AMD_Proc_GNB_Modules_GnbPcieAlibV2_VS2010.vcxproj">
+			<Project>{2B9DDE11-76F9-4773-A3CC-111FF748BAF5}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbPcieAspm\AMD_Proc_GNB_Modules_GnbPcieAspm_VS2010.vcxproj">
+			<Project>{2B6736E2-1EAF-4969-A0B3-43FBD8C80184}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbPcieClkPm\AMD_Proc_GNB_Modules_GnbPcieClkPm_VS2010.vcxproj">
+			<Project>{A3992395-4B8A-4DF4-9EB1-FF18D79E5615}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbPcieCommClkCfg\AMD_Proc_GNB_Modules_GnbPcieCommClkCfg_VS2010.vcxproj">
+			<Project>{1E93389A-32D8-483A-BDDE-A7FC15C5DE0E}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbPcieConfig\AMD_Proc_GNB_Modules_GnbPcieConfig_VS2010.vcxproj">
+			<Project>{C3EE2D73-2677-4706-835D-9EF45BC50D38}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbPcieInitLibV1\AMD_Proc_GNB_Modules_GnbPcieInitLibV1_VS2010.vcxproj">
+			<Project>{30638E07-A94B-4BD2-9416-69ABF2782409}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbPcieInitLibV4\AMD_Proc_GNB_Modules_GnbPcieInitLibV4_VS2010.vcxproj">
+			<Project>{87F3B0C3-5AFE-4F26-B886-215D89F49044}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbPcieInitLibV5\AMD_Proc_GNB_Modules_GnbPcieInitLibV5_VS2010.vcxproj">
+			<Project>{9426987E-B179-406F-8650-51A98D808763}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbPcieMaxPayload\AMD_Proc_GNB_Modules_GnbPcieMaxPayload_VS2010.vcxproj">
+			<Project>{4E8C05E3-784A-4E19-BA76-9FE43E02EAD0}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbPcieTrainingV2\AMD_Proc_GNB_Modules_GnbPcieTrainingV2_VS2010.vcxproj">
+			<Project>{CFA71AB5-3A22-4A69-9CAB-01AF7C3036AC}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbSbIommuLib\AMD_Proc_GNB_Modules_GnbSbIommuLib_VS2010.vcxproj">
+			<Project>{61F21B31-DECD-49DD-B23F-8F15FF0897CC}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbSbLib\AMD_Proc_GNB_Modules_GnbSbLib_VS2010.vcxproj">
+			<Project>{98A64F9D-5769-480C-A930-92CA8C740B13}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbScsLibV1\AMD_Proc_GNB_Modules_GnbScsLibV1_VS2010.vcxproj">
+			<Project>{8A7BA389-DB06-46E8-956D-C32A501EF1CD}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbSmuLibV7\AMD_Proc_GNB_Modules_GnbSmuLibV7_VS2010.vcxproj">
+			<Project>{17B41869-02F5-40E8-A334-3D214C2C7B72}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbSSocketLib\AMD_Proc_GNB_Modules_GnbSSocketLib_VS2010.vcxproj">
+			<Project>{93B5DDDD-5C58-4D2B-9C71-22525A8F6C9B}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbSview\AMD_Proc_GNB_Modules_GnbSview_VS2010.vcxproj">
+			<Project>{5A5DAD20-9E43-4FF6-A6F4-33E521E5C695}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbTable\AMD_Proc_GNB_Modules_GnbTable_VS2010.vcxproj">
+			<Project>{C7C6F7F5-69A9-4CE6-903C-52B2F88ABD1A}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\GNB\Modules\GnbUraLibV1\AMD_Proc_GNB_Modules_GnbUraLibV1_VS2010.vcxproj">
+			<Project>{D2E7D590-6A52-4192-9DD4-846A3F1690A5}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\IDS\Control\AMD_Proc_IDS_Control_VS2010.vcxproj">
+			<Project>{ADF3E519-7170-41BA-8C08-E3674C8CB5E7}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\IDS\Debug\AMD_Proc_IDS_Debug_VS2010.vcxproj">
+			<Project>{CE5CDE95-F32F-4568-A9AD-AC3BE6F7FBBD}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\IDS\Family\0x16\ML\AMD_Proc_IDS_Family_0x16_ML_VS2010.vcxproj">
+			<Project>{27B6181C-D404-47DF-80DB-0B38789288F1}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\IDS\Library\AMD_Proc_IDS_Library_VS2010.vcxproj">
+			<Project>{094795CB-31AA-42CE-B11C-35D39106DCD2}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\IDS\Perf\AMD_Proc_IDS_Perf_VS2010.vcxproj">
+			<Project>{7E69175B-BE27-4C13-A34F-36791BAE81BB}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Recovery\CPU\AMD_Proc_Recovery_CPU_VS2010.vcxproj">
+			<Project>{54AA28A8-E874-41CC-9B98-85272147B7C5}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Recovery\GNB\AMD_Proc_Recovery_GNB_VS2010.vcxproj">
+			<Project>{CDC460B8-48BC-4093-BE4C-6803DF752AC9}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Recovery\Mem\AMD_Proc_Recovery_Mem_VS2010.vcxproj">
+			<Project>{DB83BF66-1A89-45C4-A6AB-01F178807900}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Recovery\Mem\NB\AMD_Proc_Recovery_Mem_NB_VS2010.vcxproj">
+			<Project>{A567E331-0C3A-4B90-AF39-C94101417808}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Recovery\Mem\NB\ML\AMD_Proc_Recovery_Mem_NB_ML_VS2010.vcxproj">
+			<Project>{9A95642A-3467-4623-9C53-B7EA365462E8}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Recovery\Mem\Ps\AMD_Proc_Recovery_Mem_Ps_VS2010.vcxproj">
+			<Project>{FD6C4431-206A-47E4-ACA3-CF1E7AEE99E1}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Recovery\Mem\Ps\ML\AMD_Proc_Recovery_Mem_Ps_ML_VS2010.vcxproj">
+			<Project>{8E1F34A9-3886-4D80-98CA-CC648D508D43}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Recovery\Mem\Tech\AMD_Proc_Recovery_Mem_Tech_VS2010.vcxproj">
+			<Project>{F2E8FD2C-C733-46DD-8031-3B18EE5ADF67}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Recovery\Mem\Tech\DDR3\AMD_Proc_Recovery_Mem_Tech_DDR3_VS2010.vcxproj">
+			<Project>{4986B7E6-F6B1-4194-9703-3D4FBBC718CE}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Proc\Recovery\Topology\AMD_Proc_Recovery_Topology_VS2010.vcxproj">
+			<Project>{2CA2E5A5-206A-49FF-AC59-9248E837A822}</Project>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<LinkLibraryDependencies>true</LinkLibraryDependencies>
+			<UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+		</ProjectReference>
+	</ItemGroup>
+</Project>

@@ -1,0 +1,10 @@
+Build/
+.svn/
+*.\#
+*.bin
+*.debug
+*.elf
+*.o
+*.out
+*.swp
+*.obj
