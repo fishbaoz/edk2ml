@@ -8,3 +8,6 @@ Build/
 *.out
 *.swp
 *.obj
+rombuild.bat
+clean.bat
+Conf/.cache/
